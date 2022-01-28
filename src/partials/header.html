@@ -1,11 +1,23 @@
 <header>
-  <svg class="icon-logo" width="16" height="12">
-    <use href="./images/icons.svg#icon-logo"></use>
-  </svg>
-  <a href="#">Home</a>
-  <a href="#">My library</a>
-  <form>
-    <input></input>
-    <button type="submit">find</button>
-  </form>
+  <div class="header-container">
+    <nav class="nav">
+      <svg class="icon-logo" width="24" height="24">
+        <use href="./images/icons.svg#icon-logo"></use>
+      </svg>
+      <a class="link home-link home-link--current" href="#">Home</a>
+      <a class="link library-link library-link--current" href="#">My library</a>
+    </nav>
+    <form class="search-form">
+      <input class="search-form__input" placeholder="Search films"></input>
+      <button class="search-form__button" type="submit">
+        <svg class="icon-search" width="12" height="12">
+          <use href="./images/icons.svg#icon-search"></use>
+        </svg>
+      </button>
+    </form>
+    <p class="visually-hidden search-result-text">
+      Search result not successful. Enter the correct movie name and try
+      again
+    </p>
+  </div>
 </header>
