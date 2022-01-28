@@ -1,8 +1,14 @@
-.footer-container {
+.page-footer {
   color: $color-footer-text;
   text-align: center;
   background-color: #f7f7f7;
   padding: 30px 0;
+}
+.footer-container {
+  @media screen and (min-width: 768px) {
+    display: flex;
+    justify-content: center;
+  }
 }
 .footer-copyright {
   margin-bottom: 10px;
