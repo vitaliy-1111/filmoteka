@@ -1,0 +1,28 @@
+.cinema-gallery {
+  padding-top: 20px;
+  padding-bottom: 40px;
+}
+.cinema-gallery__item:not(:last-child) {
+  margin-bottom: 20px;
+}
+.thumb-img {
+  width: 280px;
+  height: 402px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.cinema-gallery__img {
+  margin-bottom: 10px;
+
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+.cinema-gallery__name {
+  font-weight: $font-weight-normal;
+  text-transform: uppercase;
+}
+.cinema-gallery__text {
+  color: $color-second-text;
+}
