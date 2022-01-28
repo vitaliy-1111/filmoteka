@@ -1,8 +1,9 @@
-.header-container {
+.page-header {
   width: 320px;
   min-height: 230px;
   margin: auto;
-  padding: 44px 20px;
+  padding-top: 44px;
+  padding-bottom: 44px;
 
   color: $color-header-text;
 
@@ -18,11 +19,45 @@
     background-image: linear-gradient(to right, rgba(00, 00, 00, 0.56), rgba(00, 00, 00, 0.56)),
       url('../images/home-bg-320-2x-min.jpg');
   }
+  @media screen and (min-width: 768px) {
+    width: 768px;
+    padding-top: 44px;
+    padding-bottom: 60px;
+    background-image: linear-gradient(to right, rgba(00, 00, 00, 0.56), rgba(00, 00, 00, 0.56)),
+      url('../images/home-bg-768-1x-min.jpg');
+    @media screen and (min-device-pixel-ratio: 2),
+      (min-resolution: 192dpi),
+      (min-resolution: 2dppx) {
+      background-image: linear-gradient(to right, rgba(00, 00, 00, 0.56), rgba(00, 00, 00, 0.56)),
+        url('../images/home-bg-768-2x-min.jpg');
+    }
+  }
+  @media screen and (min-width: 1024px) {
+    width: 1024px;
+    background-image: linear-gradient(to right, rgba(00, 00, 00, 0.56), rgba(00, 00, 00, 0.56)),
+      url('../images/home-bg-1024-1x-min.jpg');
+    @media screen and (min-device-pixel-ratio: 2),
+      (min-resolution: 192dpi),
+      (min-resolution: 2dppx) {
+      background-image: linear-gradient(to right, rgba(00, 00, 00, 0.56), rgba(00, 00, 00, 0.56)),
+        url('../images/home-bg-1024-2x-min.jpg');
+    }
+  }
 }
 .nav {
   display: flex;
   align-items: flex-end;
   margin-bottom: 43px;
+}
+.logo-text {
+  display: none;
+  margin-left: 10px;
+  font-size: $font-size-extra;
+  font-weight: $font-weight-normal;
+  line-height: 0.8;
+  @media screen and (min-width: 768px) {
+    display: block;
+  }
 }
 
 .home-link,
@@ -51,8 +86,12 @@
 }
 .search-form {
   position: relative;
-
   margin-bottom: 22px;
+  @media screen and (min-width: 768px) {
+    width: 340px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 .search-form__input {
   width: 100%;
@@ -77,4 +116,7 @@
 .search-result-text {
   font-size: $font-size-normal;
   color: #ff001b;
+  @media screen and (min-width: 768px) {
+    text-align: center;
+  }
 }
