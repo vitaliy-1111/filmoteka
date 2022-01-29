@@ -6,7 +6,8 @@
   padding-bottom: 44px;
 
   color: $color-header-text;
-
+}
+.page-header--home {
   background-image: linear-gradient(to right, rgba(00, 00, 00, 0.56), rgba(00, 00, 00, 0.56)),
     url('../images/home-bg-320-1x-min.jpg');
   background-repeat: no-repeat;
@@ -41,6 +42,44 @@
       (min-resolution: 2dppx) {
       background-image: linear-gradient(to right, rgba(00, 00, 00, 0.56), rgba(00, 00, 00, 0.56)),
         url('../images/home-bg-1024-2x-min.jpg');
+    }
+  }
+}
+.page-header--library {
+  background-image: linear-gradient(to right, rgba(00, 00, 00, 0.56), rgba(00, 00, 00, 0.56)),
+    url('../images/library-bg-320-1x-min.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+
+  background-color: #2f303a;
+
+  @media (min-device-pixel-ratio: 2), (min-resolution: 192dpi), (min-resolution: 2dppx) {
+    background-image: linear-gradient(to right, rgba(00, 00, 00, 0.56), rgba(00, 00, 00, 0.56)),
+      url('../images/library-bg-320-2x-min.jpg');
+  }
+  @media screen and (min-width: 768px) {
+    width: 768px;
+    padding-top: 44px;
+    padding-bottom: 60px;
+    background-image: linear-gradient(to right, rgba(00, 00, 00, 0.56), rgba(00, 00, 00, 0.56)),
+      url('../images/library-bg-768-1x-min.jpg');
+    @media screen and (min-device-pixel-ratio: 2),
+      (min-resolution: 192dpi),
+      (min-resolution: 2dppx) {
+      background-image: linear-gradient(to right, rgba(00, 00, 00, 0.56), rgba(00, 00, 00, 0.56)),
+        url('../images/library-bg-768-2x-min.jpg');
+    }
+  }
+  @media screen and (min-width: 1024px) {
+    width: 1024px;
+    background-image: linear-gradient(to right, rgba(00, 00, 00, 0.56), rgba(00, 00, 00, 0.56)),
+      url('../images/library-bg-1024-1x-min.jpg');
+    @media screen and (min-device-pixel-ratio: 2),
+      (min-resolution: 192dpi),
+      (min-resolution: 2dppx) {
+      background-image: linear-gradient(to right, rgba(00, 00, 00, 0.56), rgba(00, 00, 00, 0.56)),
+        url('../images/library-bg-1024-2x-min.jpg');
     }
   }
 }
