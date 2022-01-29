@@ -1,0 +1,14 @@
+.button {
+  min-width: 130px;
+  height: 44px;
+  background-color: transparent;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  border-radius: 5px;
+  text-transform: uppercase;
+  &:hover,
+  :focus {
+    background-color: $color-accent;
+    border: none;
+  }
+}
