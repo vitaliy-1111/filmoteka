@@ -9,16 +9,25 @@
     grid-column-gap: 30px;
     grid-row-gap: 1em;
   }
+  @media screen and (min-width: 1024px) {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-column-gap: 30px;
+    grid-row-gap: 30px;
+  }
 }
-.cinema-gallery__item:not(:last-child) {
-  margin-bottom: 20px;
-}
+// .cinema-gallery__item:not(:last-child) {
+//   // margin-bottom: 20px;
+// }
 .thumb-img {
-  width: 280px;
+  width: 294px;
   height: 402px;
   margin-bottom: 10px;
   border-radius: 5px;
   overflow: hidden;
+  @media screen and (min-width: 1024px) {
+    width: 274px;
+  }
 }
 .cinema-gallery__img {
   margin-bottom: 10px;
