@@ -161,4 +161,8 @@
 }
 .library-button {
   margin-right: 15px;
+  &--active {
+    background-color: $color-accent;
+    border: none;
+  }
 }

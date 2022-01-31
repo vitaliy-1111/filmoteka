@@ -1,48 +1,8 @@
 
 import './sass/main.scss';
+import './js/genres.js';
 // import './js/filmoteka.js';
-const homePage = `<form class="search-form">
-      <input class="search-form__input" placeholder="Search films"></input>
-      <button class="search-form__button" type="submit">
-        <svg class="icon-search" width="12" height="12">
-          <use href="./images/icons.svg#icon-search"></use>
-        </svg>
-      </button>
-    </form>
-    <p class="visually-hidden search-result-text">
-      Search result not successful. Enter the correct movie name and try
-      again
-    </p>`;
-const libraryPage = `
-    <button class="button library-button">Watched</button>
-    <button class="button library-button">Queue</button>
-    <p class="visually-hidden search-result-text">
-      Search result not successful. Enter the correct movie name and try
-      again
-    </p>
-  `;
-const genre = [
-{id: 28, name: 'Action'},
-{id: 12, name: 'Adventure'},
-{id: 16, name: 'Animation'},
-{id: 35, name: 'Comedy'},
-{id: 80, name: 'Crime'},
-{id: 99, name: 'Documentary'},
-{id: 18, name: 'Drama'},
-{id: 10751, name: 'Family'},
-{id: 14, name: 'Fantasy'},
-{id: 36, name: 'History'},
-{id: 27, name: 'Horror'},
-{id: 10402, name: 'Music'},
-{id: 9648, name: 'Mystery'},
-{id: 10749, name: 'Romance'},
-{id: 878, name: 'Science Fiction'},
-{id: 10770, name: 'TV Movie'},
-{id: 53, name: 'Thriller'},
-{id: 10752, name: 'War'},
-{id: 37, name: 'Western'},
-]
-
+import { homePage, libraryPage } from './js/template.js';
 const refs = {
   homePageLinkEl: document.querySelector("a.home-link"),
   libraryPageLinkEl: document.querySelector("a.library-link"),
@@ -57,15 +17,12 @@ const refs = {
 refs.libraryPageLinkEl.addEventListener("click", onLibraryPageLinkEl);
 refs.homePageLinkEl.addEventListener("click", onHomePageLinkEl);
 
-
-// refs.textSearchResult.classList.add("visually-hidden");
-const movies = [];
-const moviesList = [];
+const watchedList = [];
+const queueList = [];
 
 fetchMovie("movie");
 
 function fetchMovie(media) {
-  // fetch("https://api.themoviedb.org/3/trending/all/day?api_key=c54b9b3bc824900bd0fc655039f09ff1").then(resp => resp.json()).then(console.log);
   fetch(`https://api.themoviedb.org/3/trending/${media}/day?api_key=c54b9b3bc824900bd0fc655039f09ff1`).then(resp => resp.json()).then(resp => {
     console.log(resp);
     console.log(resp.results);
@@ -73,16 +30,26 @@ function fetchMovie(media) {
     const gallery = listMovies.map(movie => `<li class="cinema-gallery__item">
         <div class="thumb-img">
           <img class="cinema-gallery__img img" src=" https://image.tmdb.org/t/p/w500${movie.poster_path}" id="${movie.id}">
-
+           <div class="button-wrap">
+            <button class="button button-watched" id="${movie.id}">Watched</button>
+            <button class="button button-queue" id="${movie.id}">Queue</button>
+          </div>
         </div>
         <div class="thumb-text">
           <p class="cinema-gallery__name">${movie.name || movie.title}</p>
-          <p class="cinema-gallery__text">${movie.genre_ids } | ${movie.release_date || movie.first_air_date}</p>
-        </div>`);
-    
+          <p class="cinema-gallery__text">${movie.genre_ids} | ${movie.release_date || movie.first_air_date}</p>
+        </div>`);    
     refs.galleryListEl.innerHTML = gallery.join("");
   })
-  }
+}
+
+
+function addToWatched(e) {
+  console.log("add to watch")
+}
+function addToQueue(e) {
+  console.log("add to queue")
+}
 
 function onLibraryPageLinkEl(e) {
   e.preventDefault();
@@ -91,37 +58,8 @@ function onLibraryPageLinkEl(e) {
   refs.libraryPageLinkEl.classList.add("library-link--current"); 
   refs.searhFormEl.innerHTML = libraryPage;
 
-  //  fetch(`https://api.themoviedb.org/3/trending/tv/day?api_key=c54b9b3bc824900bd0fc655039f09ff1`).then(resp => resp.json()).then(resp => {
-  //   console.log(resp);
-  //   console.log(resp.results);
-  //   const listMovies = resp.results;
-  //   const gallery = listMovies.map(movie => `<li class="cinema-gallery__item">
-  //       <div class="thumb-img">
-  //         <img class="cinema-gallery__img img" src=" https://image.tmdb.org/t/p/w500${movie.poster_path}" id="${movie.id}">
-
-  //       </div>
-  //       <div class="thumb-text">
-  //         <p class="cinema-gallery__name">${movie.name || movie.title}</p>
-  //         <p class="cinema-gallery__text">${movie.genre_ids } | ${movie.release_date || movie.first_air_date}</p>
-  //       </div>`);
-    
-  //   refs.galleryListEl.innerHTML = gallery.join("");
-  // })
-  const localMovies = JSON.parse(localStorage.getItem("moviesList"));
-  console.log(localMovies);
-   const gallery = localMovies.map(movie => `<li class="cinema-gallery__item">
-       <div class="thumb-img">
-      <img class="cinema-gallery__img img" src=" https://image.tmdb.org/t/p/w500${movie.poster_path}" id="${movie.id}">
-
-     </div>
-     <div class="thumb-text">
-          <p class="cinema-gallery__name">${movie.name || movie.title}</p>
-         <p class="cinema-gallery__text">${movie.genres.map(genre => genre.name) } | ${movie.release_date || movie.first_air_date}</p>
-        </div>`);
-    
-    refs.galleryListEl.innerHTML = gallery.join("");
-
-
+  const localMovies = JSON.parse(localStorage.getItem("watchedList"));
+  renderGallery(localMovies);
 }
 
 function onHomePageLinkEl(e) {
@@ -134,31 +72,57 @@ function onHomePageLinkEl(e) {
 }
 
 document.querySelector("body").addEventListener("click", onBody);
+
 function onBody(e) {
-  console.log("target:", e.target);
-  console.log("currentTarget", e.currentTarget)
-  console.log(e.target.className)
+  if (e.target.classList.contains("library-button--queue")) {
+   
+    e.target.classList.add("library-button--active")
+    console.log(e.target.previousSibling)
+    const localMovies = JSON.parse(localStorage.getItem("queueList"));
+    renderGallery(localMovies);
+  }
+  if (e.target.classList.contains("library-button--watched")) {
+     console.log(e.target)
+      const localMovies = JSON.parse(localStorage.getItem("watchedList"));
+       renderGallery(localMovies);
+  }
 
-  if (e.target.classList.contains("cinema-gallery__img")){
-    console.log("yes")
-    movies.push( e.target.id)
-    localStorage.setItem("movies", movies);
-    
-    console.log(movies);
+  if (e.target.classList.contains("button-watched")) {
+    console.log(e.target);
+      console.log(e.target.id);
+
     fetch(`https://api.themoviedb.org/3/movie/${e.target.id}?api_key=c54b9b3bc824900bd0fc655039f09ff1&language=en-US`).then(resp => resp.json()).then(resp => {
-      console.log(resp);
-      const { title, id } = resp;
-      // console.log(resp.results);
-      const cinemaList = {title, id};
-      moviesList.push(resp);
-
-      localStorage.setItem("moviesList", JSON.stringify(moviesList));
+      watchedList.push(resp);
+      localStorage.setItem("watchedList", JSON.stringify(watchedList));
     })
+  }
 
-    
+  if (e.target.classList.contains("button-queue")) {
+    console.log(e.target.id);
+    fetch(`https://api.themoviedb.org/3/movie/${e.target.id}?api_key=c54b9b3bc824900bd0fc655039f09ff1&language=en-US`).then(resp => resp.json()).then(resp => {
+      queueList.push(resp);
+      localStorage.setItem("queueList", JSON.stringify(queueList));
+    })
+    // console.log(e.target.classList.contains("library-button--queue"))
   }
 }
-console.log(movies)
+
+function renderGallery(movies) {
+         const gallery = movies.map(movie => `<li class="cinema-gallery__item">
+       <div class="thumb-img">
+          <img class="cinema-gallery__img img" src=" https://image.tmdb.org/t/p/w500${movie.poster_path}" id="${movie.id}">
+          <div class="button-wrap">
+            <button class="button button-watched" id="${movie.id}">Watched</button>
+            <button class="button button-queue" id="${movie.id}">Queue</button>
+          </div>
+      </div>
+       <div class="thumb-text">
+          <p class="cinema-gallery__name">${movie.name || movie.title}</p>
+         <p class="cinema-gallery__text">${movie.genres.map(genre => genre.name) } | ${movie.release_date || movie.first_air_date}</p>
+        </div>`);
+      refs.galleryListEl.innerHTML = gallery.join("");
+  
+}
 // import fetch from "./js/filmoteka.js";
 
 // fetch();
