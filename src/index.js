@@ -17,7 +17,7 @@ const refs = {
 refs.libraryPageLinkEl.addEventListener("click", onLibraryPageLinkEl);
 refs.homePageLinkEl.addEventListener("click", onHomePageLinkEl);
 
-const watchedList = [];
+let watchedList = [];
 const queueList = [];
 
 fetchMovie("movie");
@@ -74,14 +74,18 @@ function onHomePageLinkEl(e) {
 document.querySelector("body").addEventListener("click", onBody);
 
 function onBody(e) {
+   e.preventDefault();
   if (e.target.classList.contains("library-button--queue")) {
    
     e.target.classList.add("library-button--active")
-    console.log(e.target.previousSibling)
+    e.target.previousElementSibling.classList.remove("library-button--active");
+    console.log(e.target.previousElementSibling)
     const localMovies = JSON.parse(localStorage.getItem("queueList"));
     renderGallery(localMovies);
   }
   if (e.target.classList.contains("library-button--watched")) {
+    e.target.classList.add("library-button--active")
+    e.target.nextElementSibling.classList.remove("library-button--active");
      console.log(e.target)
       const localMovies = JSON.parse(localStorage.getItem("watchedList"));
        renderGallery(localMovies);
@@ -89,10 +93,29 @@ function onBody(e) {
 
   if (e.target.classList.contains("button-watched")) {
     console.log(e.target);
-      console.log(e.target.id);
+    console.log(e.target.id);
+    
 
-    fetch(`https://api.themoviedb.org/3/movie/${e.target.id}?api_key=c54b9b3bc824900bd0fc655039f09ff1&language=en-US`).then(resp => resp.json()).then(resp => {
-      watchedList.push(resp);
+    fetch(`https://api.themoviedb.org/3/movie/${e.target.id}?api_key=c54b9b3bc824900bd0fc655039f09ff1&language=en-US`)
+      .then(resp => resp.json())
+      .then(resp => { 
+        if (!(watchedList.find(item => item.id == resp.id) && true) || false) {
+          watchedList.push(resp);
+        }
+
+        // watchedList.includes(resp) ? watchedList.push(resp) : watchedList;
+        // watchedList = watchedList.map((movie) => {
+        //   Number(movie.id) !== Number(resp.id) ? resp : movie;
+        // })
+      
+        
+        // watchedList = watchedList.map((movie) => Number(movie.id) === Number(e.target.id) ? { ...movie} : movie);
+
+        //  todos = todos.map((todo) =>todo.id === id ? {...todo, checked: !todo.checked,} : todo, );
+
+        console.log(resp);
+        console.log(watchedList);
+      
       localStorage.setItem("watchedList", JSON.stringify(watchedList));
     })
   }
