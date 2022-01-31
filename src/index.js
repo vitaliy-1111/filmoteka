@@ -18,14 +18,12 @@ refs.libraryPageLinkEl.addEventListener("click", onLibraryPageLinkEl);
 refs.homePageLinkEl.addEventListener("click", onHomePageLinkEl);
 
 let watchedList = [];
-const queueList = [];
+let queueList = [];
 
 fetchMovie("movie");
 
 function fetchMovie(media) {
   fetch(`https://api.themoviedb.org/3/trending/${media}/day?api_key=c54b9b3bc824900bd0fc655039f09ff1`).then(resp => resp.json()).then(resp => {
-    console.log(resp);
-    console.log(resp.results);
     const listMovies = resp.results;
     const gallery = listMovies.map(movie => `<li class="cinema-gallery__item">
         <div class="thumb-img">
@@ -42,15 +40,6 @@ function fetchMovie(media) {
     refs.galleryListEl.innerHTML = gallery.join("");
   })
 }
-
-
-function addToWatched(e) {
-  console.log("add to watch")
-}
-function addToQueue(e) {
-  console.log("add to queue")
-}
-
 function onLibraryPageLinkEl(e) {
   e.preventDefault();
   document.querySelector("header").classList.add("page-header--library");
@@ -76,57 +65,42 @@ document.querySelector("body").addEventListener("click", onBody);
 function onBody(e) {
    e.preventDefault();
   if (e.target.classList.contains("library-button--queue")) {
-   
     e.target.classList.add("library-button--active")
     e.target.previousElementSibling.classList.remove("library-button--active");
-    console.log(e.target.previousElementSibling)
     const localMovies = JSON.parse(localStorage.getItem("queueList"));
     renderGallery(localMovies);
   }
   if (e.target.classList.contains("library-button--watched")) {
     e.target.classList.add("library-button--active")
     e.target.nextElementSibling.classList.remove("library-button--active");
-     console.log(e.target)
-      const localMovies = JSON.parse(localStorage.getItem("watchedList"));
-       renderGallery(localMovies);
+    const localMovies = JSON.parse(localStorage.getItem("watchedList"));
+     renderGallery(localMovies);
   }
 
   if (e.target.classList.contains("button-watched")) {
-    console.log(e.target);
-    console.log(e.target.id);
-    
-
-    fetch(`https://api.themoviedb.org/3/movie/${e.target.id}?api_key=c54b9b3bc824900bd0fc655039f09ff1&language=en-US`)
+    watchedList = [ ...JSON.parse(localStorage.getItem("watchedList"))]
+    if (!(watchedList.find(item => item.id == e.target.id) && true) || false) {
+       fetch(`https://api.themoviedb.org/3/movie/${e.target.id}?api_key=c54b9b3bc824900bd0fc655039f09ff1&language=en-US`)
       .then(resp => resp.json())
       .then(resp => { 
-        if (!(watchedList.find(item => item.id == resp.id) && true) || false) {
           watchedList.push(resp);
-        }
-
-        // watchedList.includes(resp) ? watchedList.push(resp) : watchedList;
-        // watchedList = watchedList.map((movie) => {
-        //   Number(movie.id) !== Number(resp.id) ? resp : movie;
-        // })
-      
-        
-        // watchedList = watchedList.map((movie) => Number(movie.id) === Number(e.target.id) ? { ...movie} : movie);
-
-        //  todos = todos.map((todo) =>todo.id === id ? {...todo, checked: !todo.checked,} : todo, );
-
         console.log(resp);
         console.log(watchedList);
       
       localStorage.setItem("watchedList", JSON.stringify(watchedList));
     })
+  }   
   }
 
   if (e.target.classList.contains("button-queue")) {
     console.log(e.target.id);
-    fetch(`https://api.themoviedb.org/3/movie/${e.target.id}?api_key=c54b9b3bc824900bd0fc655039f09ff1&language=en-US`).then(resp => resp.json()).then(resp => {
-      queueList.push(resp);
-      localStorage.setItem("queueList", JSON.stringify(queueList));
-    })
-    // console.log(e.target.classList.contains("library-button--queue"))
+    queueList = [ ...JSON.parse(localStorage.getItem("queueList"))]
+    if (!(queueList.find(item => item.id == e.target.id) && true) || false) {
+      fetch(`https://api.themoviedb.org/3/movie/${e.target.id}?api_key=c54b9b3bc824900bd0fc655039f09ff1&language=en-US`).then(resp => resp.json()).then(resp => {
+        queueList.push(resp);
+        localStorage.setItem("queueList", JSON.stringify(queueList));
+      })
+    }
   }
 }
 
@@ -143,8 +117,7 @@ function renderGallery(movies) {
           <p class="cinema-gallery__name">${movie.name || movie.title}</p>
          <p class="cinema-gallery__text">${movie.genres.map(genre => genre.name) } | ${movie.release_date || movie.first_air_date}</p>
         </div>`);
-      refs.galleryListEl.innerHTML = gallery.join("");
-  
+  refs.galleryListEl.innerHTML = gallery.join("");
 }
 // import fetch from "./js/filmoteka.js";
 
