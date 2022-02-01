@@ -7,7 +7,7 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-column-gap: 30px;
-    grid-row-gap: 1em;
+    grid-row-gap: 30px;
   }
   @media screen and (min-width: 1024px) {
     display: grid;
@@ -41,6 +41,11 @@
   height: 100%;
   width: 100%;
   object-fit: cover;
+  background-image: linear-gradient(to right, rgba(00, 00, 00, 0.56), rgba(00, 00, 00, 0.56)),
+    url('../images/home-bg-320-1x-min.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 .cinema-gallery__name {
   font-weight: $font-weight-normal;

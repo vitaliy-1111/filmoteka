@@ -1,6 +1,7 @@
 
 import './sass/main.scss';
 import './js/genres.js';
+import debounce from 'lodash.debounce';
 // import './js/filmoteka.js';
 import { homePage, libraryPage } from './js/template.js';
 const refs = {
@@ -14,13 +15,39 @@ const refs = {
   gallery: document.querySelector(".cinema-gallery"),
   galleryListEl: document.querySelector(".cinema-gallery__list"),  
 }
-refs.libraryPageLinkEl.addEventListener("click", onLibraryPageLinkEl);
-refs.homePageLinkEl.addEventListener("click", onHomePageLinkEl);
-
 let watchedList = [];
 let queueList = [];
 
+
+refs.libraryPageLinkEl.addEventListener("click", onLibraryPageLinkEl);
+refs.homePageLinkEl.addEventListener("click", onHomePageLinkEl);
+refs.searhFormEl.addEventListener('input', debounce((onSearhFormInput), 1000));
+
 fetchMovie("movie");
+
+function onSearhFormInput(e) {
+  console.log(e.target.value);
+  fetch(`https://api.themoviedb.org/3/search/movie?api_key=c54b9b3bc824900bd0fc655039f09ff1&language=en-US&query=${e.target.value}&page=1&include_adult=false`)
+    .then(resp => resp.json()).then(resp => {
+      console.log(resp);
+    const listMovies = resp.results;
+    const gallery = listMovies.map(movie => `<li class="cinema-gallery__item">
+        <div class="thumb-img">
+          <img class="cinema-gallery__img img" src="https://image.tmdb.org/t/p/w500${movie.poster_path || movie.backdrop_path}" id="${movie.id}" loading="lazy">
+           <div class="button-wrap">
+            <button class="button button-watched" id="${movie.id}">Watched</button>
+            <button class="button button-queue" id="${movie.id}">Queue</button>
+          </div>
+        </div>
+        <div class="thumb-text">
+          <p class="cinema-gallery__name">${movie.name || movie.title}</p>
+          <p class="cinema-gallery__text">${movie.genre_ids} | ${movie.release_date || movie.first_air_date || ' '}</p>
+        </div>`);    
+    refs.galleryListEl.innerHTML = gallery.join("");
+  })
+}
+
+
 
 function fetchMovie(media) {
   fetch(`https://api.themoviedb.org/3/trending/${media}/day?api_key=c54b9b3bc824900bd0fc655039f09ff1`).then(resp => resp.json()).then(resp => {
@@ -35,7 +62,7 @@ function fetchMovie(media) {
         </div>
         <div class="thumb-text">
           <p class="cinema-gallery__name">${movie.name || movie.title}</p>
-          <p class="cinema-gallery__text">${movie.genre_ids} | ${movie.release_date || movie.first_air_date}</p>
+          <p class="cinema-gallery__text">${movie.genre_ids} | ${movie.release_date || movie.first_air_date || 'soon'}</p>
         </div>`);    
     refs.galleryListEl.innerHTML = gallery.join("");
   })
@@ -140,6 +167,8 @@ function renderEmptyGallery() {
   const gallery = `<li class="cinema-gallery__item">Empty LocalStorage</li>`;
   refs.galleryListEl.innerHTML = gallery;
 }
+
+
 // import fetch from "./js/filmoteka.js";
 // localStorage.removeItem("watchedList")
 // localStorage.removeItem("queueList")
