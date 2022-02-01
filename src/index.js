@@ -1,10 +1,11 @@
 
 import './sass/main.scss';
 import './js/genres.js';
+import './js/pagination.js';
 import debounce from 'lodash.debounce';
 // import './js/filmoteka.js';
 import { homePage, libraryPage } from './js/template.js';
-const refs = {
+export const refs = {
   homePageLinkEl: document.querySelector("a.home-link"),
   libraryPageLinkEl: document.querySelector("a.library-link"),
   headerEl: document.querySelector("header.page-header"),
@@ -15,6 +16,8 @@ const refs = {
   gallery: document.querySelector(".cinema-gallery"),
   galleryListEl: document.querySelector(".cinema-gallery__list"),  
 }
+// tuiPagination();
+
 let watchedList = [];
 let queueList = [];
 
