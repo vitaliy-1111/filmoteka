@@ -1,7 +1,7 @@
 
 import './sass/main.scss';
 import './js/genres.js';
-import './js/pagination.js';
+import { paginationMovies, paginationSearchMovies } from'./js/pagination.js';
 import debounce from 'lodash.debounce';
 // import './js/filmoteka.js';
 import { homePage, libraryPage } from './js/template.js';
@@ -18,6 +18,7 @@ export const refs = {
 }
 // tuiPagination();
 
+
 let watchedList = [];
 let queueList = [];
 
@@ -30,6 +31,7 @@ fetchMovie("movie");
 
 function onSearhFormInput(e) {
   console.log(e.target.value);
+  paginationSearchMovies(e.target.value)
   fetch(`https://api.themoviedb.org/3/search/movie?api_key=c54b9b3bc824900bd0fc655039f09ff1&language=en-US&query=${e.target.value}&page=1&include_adult=false`)
     .then(resp => resp.json()).then(resp => {
       console.log(resp);
@@ -40,14 +42,16 @@ function onSearhFormInput(e) {
            <div class="button-wrap">
             <button class="button button-watched" id="${movie.id}">Watched</button>
             <button class="button button-queue" id="${movie.id}">Queue</button>
+            <button class="button button-delete" id="${movie.id}">Delete</button>
           </div>
         </div>
         <div class="thumb-text">
           <p class="cinema-gallery__name">${movie.name || movie.title}</p>
           <p class="cinema-gallery__text">${movie.genre_ids} | ${movie.release_date || movie.first_air_date || ' '}</p>
         </div>`);    
-    refs.galleryListEl.innerHTML = gallery.join("");
-  })
+    refs.galleryListEl.innerHTML = gallery;    
+    })
+  
 }
 
 
@@ -61,18 +65,24 @@ function fetchMovie(media) {
            <div class="button-wrap">
             <button class="button button-watched" id="${movie.id}">Watched</button>
             <button class="button button-queue" id="${movie.id}">Queue</button>
+              <button class="button button-delete" id="${movie.id}">Delete</button>
           </div>
         </div>
         <div class="thumb-text">
           <p class="cinema-gallery__name">${movie.name || movie.title}</p>
           <p class="cinema-gallery__text">${movie.genre_ids} | ${movie.release_date || movie.first_air_date || 'soon'}</p>
         </div>`);    
-    refs.galleryListEl.innerHTML = gallery.join("");
+    refs.galleryListEl.innerHTML = gallery;
+    paginationMovies();
   })
 }
 function onLibraryPageLinkEl(e) {
   e.preventDefault();
   document.querySelector("header").classList.add("page-header--library");
+ 
+  function onLidBtn() {
+    console.log("it's work");
+  }
   refs.homePageLinkEl.classList.remove("home-link--current");
   refs.libraryPageLinkEl.classList.add("library-link--current"); 
   refs.searhFormEl.innerHTML = libraryPage;
@@ -84,6 +94,7 @@ function onLibraryPageLinkEl(e) {
   } else {
     renderGallery(localMovies);
   }
+  document.querySelector(".library-button--watched").addEventListener('click', onLidBtn)
 }
 
 function onHomePageLinkEl(e) {
@@ -119,6 +130,21 @@ function onBody(e) {
       renderGallery(localMovies);
     }
   }
+   if (e.target.classList.contains("button-delete")) {
+     let localMovies = JSON.parse(localStorage.getItem("watchedList"));
+     console.log('delete e:', e.currentTarget.children)
+     console.log(localMovies);
+     localMovies = localMovies.filter((movie) => movie.id != e.target.id);
+     localStorage.setItem("watchedList", JSON.stringify(localMovies));
+     localMovies = JSON.parse(localStorage.getItem("watchedList"));
+
+     console.log(localMovies);
+    if (localMovies === null) {
+      renderEmptyGallery();
+    } else {
+      renderGallery(localMovies);
+    }
+  }
 
   if (e.target.classList.contains("button-watched")) {
     console.log(JSON.parse(localStorage.getItem("watchedList")))
@@ -128,9 +154,7 @@ function onBody(e) {
       fetch(`https://api.themoviedb.org/3/movie/${e.target.id}?api_key=c54b9b3bc824900bd0fc655039f09ff1&language=en-US`)
         .then(resp => resp.json())
         .then(resp => {
-          watchedList.push(resp);
-          console.log(resp);
-          console.log(watchedList);          
+          watchedList.push(resp);      
           localStorage.setItem("watchedList", JSON.stringify(watchedList));
         })
     }
@@ -158,13 +182,14 @@ function renderGallery(movies) {
           <div class="button-wrap">
             <button class="button button-watched" id="${movie.id}">Watched</button>
             <button class="button button-queue" id="${movie.id}">Queue</button>
+            <button class="button button-delete" id="${movie.id}">delete</button>
           </div>
       </div>
        <div class="thumb-text">
           <p class="cinema-gallery__name">${movie.name || movie.title}</p>
          <p class="cinema-gallery__text">${movie.genres.map(genre => genre.name) } | ${movie.release_date || movie.first_air_date}</p>
         </div>`);
-  refs.galleryListEl.innerHTML = gallery.join("");
+  refs.galleryListEl.innerHTML = gallery;
 }
 function renderEmptyGallery() {
   const gallery = `<li class="cinema-gallery__item">Empty LocalStorage</li>`;
@@ -173,7 +198,7 @@ function renderEmptyGallery() {
 
 
 // import fetch from "./js/filmoteka.js";
-// localStorage.removeItem("watchedList")
-// localStorage.removeItem("queueList")
+localStorage.removeItem("watchedList")
+localStorage.removeItem("queueList")
 
 // fetch();

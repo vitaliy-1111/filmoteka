@@ -31,48 +31,98 @@ import {refs} from '../index.js';
 //     console.log('curren page:' + evenData.page)
 //   })
 // }
-const pagination = new Pagination('#tui-pagination-container', {
-  totalItems: 0,
-  itemPerPage: 20,
-  visiblepages: 5,
-  page: 1,
-});
-const page = pagination.getCurrentPage();
+export function paginationMovies() {
+  const pagination = new Pagination('#tui-pagination-container', {
+    totalItems: 0,
+    itemPerPage: 20,
+    visiblePages: 5,
+    page: 1,
+  });
+  const page = pagination.getCurrentPage();
 
-fetchImages(page).then((data) => {
-   console.log(data)
-  pagination.reset(data.total_pages);
-  renderImages(data);
-  console.log(data)
-});
+  fetchImages(page).then((data) => {
+    console.log(data)
+    pagination.reset(data.total_pages);
+    renderImages(data);
+    console.log(data)
+  });
+  pagination.on('afterMove', (e) => {
+    const currentPage = e.page;
+    fetchImages(currentPage).then((data) => renderImages(data))
+  });
 
-pagination.on('afterMove', (e) => {
-  const currentPage = e.page;
-  fetchImages(currentPage).then((data) => renderImages(data))
-});
-
-function fetchImages(page) {
-  return fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=c54b9b3bc824900bd0fc655039f09ff1&page=${page}`).
-    then((res) => res.json())
+  function fetchImages(page) {
+    return fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=c54b9b3bc824900bd0fc655039f09ff1&page=${page}`).
+      then((res) => res.json())
     // .then((data)=>({images: data.hits, total: data.total_pages}))
-}
-function renderImages(images) {
-  
-  console.log('render');
-  console.log(images);
-      const listMovies = images.results;
+  }
+  function renderImages(images) {  
+    console.log('render');
+    console.log(images);
+    const listMovies = images.results;
     const gallery = listMovies.map(movie => `<li class="cinema-gallery__item">
         <div class="thumb-img">
           <img class="cinema-gallery__img img" src="https://image.tmdb.org/t/p/w500${movie.poster_path || movie.backdrop_path}" id="${movie.id}" loading="lazy">
            <div class="button-wrap">
             <button class="button button-watched" id="${movie.id}">Watched</button>
             <button class="button button-queue" id="${movie.id}">Queue</button>
+              <button class="button button-delete" id="${movie.id}">delete</button>
           </div>
         </div>
         <div class="thumb-text">
           <p class="cinema-gallery__name">${movie.name || movie.title}</p>
           <p class="cinema-gallery__text">${movie.genre_ids} | ${movie.release_date || movie.first_air_date || ' '}</p>
-        </div>`);    
+        </div></li>
+        `);
     refs.galleryListEl.innerHTML = gallery.join("");
-  // console.log(images.page);
+    // console.log(images.page);
+  }
+}
+export function paginationSearchMovies(value) {
+  const pagination = new Pagination('#tui-pagination-container', {
+    totalItems: 0,
+    itemPerPage: 20,
+    visiblePages: 5,
+    page: 1,
+  });
+  const page = pagination.getCurrentPage();
+  const queryValue = value;
+
+  fetchImages(page).then((data) => {
+    console.log(data)
+    pagination.reset(data.total_pages);
+    renderImages(data);
+    console.log(data)
+  });
+  pagination.on('afterMove', (e) => {
+    const currentPage = e.page;
+    fetchImages(currentPage).then((data) => renderImages(data))
+  });
+
+  function fetchImages(page) {
+    return fetch(`https://api.themoviedb.org/3/search/movie?api_key=c54b9b3bc824900bd0fc655039f09ff1&language=en-US&query=${queryValue}&page=${page}&include_adult=false`).
+      then((res) => res.json())
+    // .then((data)=>({images: data.hits, total: data.total_pages}))
+  }
+  function renderImages(images) {  
+    console.log('render');
+    console.log(images);
+    const listMovies = images.results;
+    const gallery = listMovies.map(movie => `<li class="cinema-gallery__item">
+        <div class="thumb-img">
+          <img class="cinema-gallery__img img" src="https://image.tmdb.org/t/p/w500${movie.poster_path || movie.backdrop_path}" id="${movie.id}" loading="lazy">
+           <div class="button-wrap">
+            <button class="button button-watched" id="${movie.id}">Watched</button>
+            <button class="button button-queue" id="${movie.id}">Queue</button>
+             <button class="button button-delete" id="${movie.id}">Delete</button>
+          </div>
+        </div>
+        <div class="thumb-text">
+          <p class="cinema-gallery__name">${movie.name || movie.title}</p>
+          <p class="cinema-gallery__text">${movie.genre_ids} | ${movie.release_date || movie.first_air_date || ' '}</p>
+        </div></li>
+        `);
+    refs.galleryListEl.innerHTML = gallery.join("");
+    // console.log(images.page);
+  }
 }
