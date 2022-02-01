@@ -2,7 +2,7 @@ export const homePage = `<form class="search-form">
       <input class="search-form__input" placeholder="Search films"></input>
       <button class="search-form__button" type="submit">
         <svg class="icon-search" width="12" height="12">
-          <use href="./images/icons.svg#icon-search"></use>
+          <use href="./src/images/icons.svg#icon-search"></use>
         </svg>
       </button>
     </form>
