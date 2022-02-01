@@ -27,7 +27,7 @@ function fetchMovie(media) {
     const listMovies = resp.results;
     const gallery = listMovies.map(movie => `<li class="cinema-gallery__item">
         <div class="thumb-img">
-          <img class="cinema-gallery__img img" src=" https://image.tmdb.org/t/p/w500${movie.poster_path}" id="${movie.id}">
+          <img class="cinema-gallery__img img" src=" https://image.tmdb.org/t/p/w500${movie.poster_path}" id="${movie.id}" loading="lazy">
            <div class="button-wrap">
             <button class="button button-watched" id="${movie.id}">Watched</button>
             <button class="button button-queue" id="${movie.id}">Queue</button>
@@ -48,7 +48,12 @@ function onLibraryPageLinkEl(e) {
   refs.searhFormEl.innerHTML = libraryPage;
 
   const localMovies = JSON.parse(localStorage.getItem("watchedList"));
-  renderGallery(localMovies);
+  console.log(localMovies);
+  if (localMovies === null) {
+    renderEmptyGallery();
+  } else {
+    renderGallery(localMovies);
+  }
 }
 
 function onHomePageLinkEl(e) {
@@ -70,8 +75,9 @@ function onBody(e) {
     const localMovies = JSON.parse(localStorage.getItem("queueList"));
     if (localMovies === null) {
       renderEmptyGallery();
+    } else {
+      renderGallery(localMovies);
     }
-    renderGallery(localMovies);
   }
   if (e.target.classList.contains("library-button--watched")) {
     e.target.classList.add("library-button--active")
@@ -79,28 +85,33 @@ function onBody(e) {
     const localMovies = JSON.parse(localStorage.getItem("watchedList"));
     if (localMovies === null) {
       renderEmptyGallery();
+    } else {
+      renderGallery(localMovies);
     }
-     renderGallery(localMovies);
   }
 
   if (e.target.classList.contains("button-watched")) {
-    watchedList = [ ...JSON.parse(localStorage.getItem("watchedList"))]
+    console.log(JSON.parse(localStorage.getItem("watchedList")))
+    const localWatchedList = JSON.parse(localStorage.getItem("watchedList"));
+    localWatchedList === null ? localWatchedList : watchedList = [...localWatchedList];    
     if (!(watchedList.find(item => item.id == e.target.id) && true) || false) {
-       fetch(`https://api.themoviedb.org/3/movie/${e.target.id}?api_key=c54b9b3bc824900bd0fc655039f09ff1&language=en-US`)
-      .then(resp => resp.json())
-      .then(resp => { 
+      fetch(`https://api.themoviedb.org/3/movie/${e.target.id}?api_key=c54b9b3bc824900bd0fc655039f09ff1&language=en-US`)
+        .then(resp => resp.json())
+        .then(resp => {
           watchedList.push(resp);
-        console.log(resp);
-        console.log(watchedList);
-      
-      localStorage.setItem("watchedList", JSON.stringify(watchedList));
-    })
-  }   
+          console.log(resp);
+          console.log(watchedList);          
+          localStorage.setItem("watchedList", JSON.stringify(watchedList));
+        })
+    }
   }
+  
 
   if (e.target.classList.contains("button-queue")) {
     console.log(e.target.id);
-    queueList = [ ...JSON.parse(localStorage.getItem("queueList"))]
+     const localQueueList = JSON.parse(localStorage.getItem("queueList"));
+    localQueueList === null ? localQueueList : queueList = [...localQueueList]; 
+    // queueList = [ ...JSON.parse(localStorage.getItem("queueList"))]
     if (!(queueList.find(item => item.id == e.target.id) && true) || false) {
       fetch(`https://api.themoviedb.org/3/movie/${e.target.id}?api_key=c54b9b3bc824900bd0fc655039f09ff1&language=en-US`).then(resp => resp.json()).then(resp => {
         queueList.push(resp);
@@ -111,9 +122,9 @@ function onBody(e) {
 }
 
 function renderGallery(movies) {
-         const gallery = movies.map(movie => `<li class="cinema-gallery__item">
+      const gallery = movies.map(movie => `<li class="cinema-gallery__item">
        <div class="thumb-img">
-          <img class="cinema-gallery__img img" src=" https://image.tmdb.org/t/p/w500${movie.poster_path}" id="${movie.id}">
+          <img class="cinema-gallery__img img" src=" https://image.tmdb.org/t/p/w500${movie.poster_path}" id="${movie.id} loading="lazy">
           <div class="button-wrap">
             <button class="button button-watched" id="${movie.id}">Watched</button>
             <button class="button button-queue" id="${movie.id}">Queue</button>
@@ -127,8 +138,10 @@ function renderGallery(movies) {
 }
 function renderEmptyGallery() {
   const gallery = `<li class="cinema-gallery__item">Empty LocalStorage</li>`;
-  refs.galleryListEl.innerHTML = gallery.join("");
+  refs.galleryListEl.innerHTML = gallery;
 }
 // import fetch from "./js/filmoteka.js";
+// localStorage.removeItem("watchedList")
+// localStorage.removeItem("queueList")
 
 // fetch();
