@@ -68,12 +68,18 @@ function onBody(e) {
     e.target.classList.add("library-button--active")
     e.target.previousElementSibling.classList.remove("library-button--active");
     const localMovies = JSON.parse(localStorage.getItem("queueList"));
+    if (localMovies === null) {
+      renderEmptyGallery();
+    }
     renderGallery(localMovies);
   }
   if (e.target.classList.contains("library-button--watched")) {
     e.target.classList.add("library-button--active")
     e.target.nextElementSibling.classList.remove("library-button--active");
     const localMovies = JSON.parse(localStorage.getItem("watchedList"));
+    if (localMovies === null) {
+      renderEmptyGallery();
+    }
      renderGallery(localMovies);
   }
 
@@ -117,6 +123,10 @@ function renderGallery(movies) {
           <p class="cinema-gallery__name">${movie.name || movie.title}</p>
          <p class="cinema-gallery__text">${movie.genres.map(genre => genre.name) } | ${movie.release_date || movie.first_air_date}</p>
         </div>`);
+  refs.galleryListEl.innerHTML = gallery.join("");
+}
+function renderEmptyGallery() {
+  const gallery = `<li class="cinema-gallery__item">Empty LocalStorage</li>`;
   refs.galleryListEl.innerHTML = gallery.join("");
 }
 // import fetch from "./js/filmoteka.js";
