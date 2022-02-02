@@ -1,27 +1,24 @@
 
 import './sass/main.scss';
+import 'basiclightbox/dist/basicLightbox.min.css';
 import './js/genres.js';
-import { paginationMovies, paginationSearchMovies } from'./js/pagination.js';
+
+import * as basicLightbox from 'basiclightbox';
+import { paginationMovies, paginationSearchMovies } from './js/pagination.js';
+import { fetchMoviesByQuery, fetchMoviesByMedia, fetchMovieById } from './js/fetch.js';
 import debounce from 'lodash.debounce';
 // import './js/filmoteka.js';
 import { homePage, libraryPage } from './js/template.js';
-export const refs = {
-  homePageLinkEl: document.querySelector("a.home-link"),
-  libraryPageLinkEl: document.querySelector("a.library-link"),
-  headerEl: document.querySelector("header.page-header"),
-  body: document.querySelector("body"),
-  textSearchResult: document.querySelector("p.search-result-text"),
-  nav: document.querySelector("nav.nav"),
-  searhFormEl: document.querySelector("form.search-form"),
-  gallery: document.querySelector(".cinema-gallery"),
-  galleryListEl: document.querySelector(".cinema-gallery__list"),  
-}
-// tuiPagination();
-
+import { refs } from './js/refs.js';
+import { renderNewGallery, renderEmptyGallery } from './js/render.js';
 
 let watchedList = [];
 let queueList = [];
 
+const instance = basicLightbox.create(`
+	<h1>Dynamic Content</h1>
+	<p>You can set the content of the lightbox with JS.</p>
+`);
 
 refs.libraryPageLinkEl.addEventListener("click", onLibraryPageLinkEl);
 refs.homePageLinkEl.addEventListener("click", onHomePageLinkEl);
@@ -31,70 +28,21 @@ fetchMovie("movie");
 
 function onSearhFormInput(e) {
   console.log(e.target.value);
-  paginationSearchMovies(e.target.value)
-  fetch(`https://api.themoviedb.org/3/search/movie?api_key=c54b9b3bc824900bd0fc655039f09ff1&language=en-US&query=${e.target.value}&page=1&include_adult=false`)
-    .then(resp => resp.json()).then(resp => {
-      console.log(resp);
+  const searchQueryValue = e.target.value;
+  // paginationSearchMovies(e.target.value)
+  fetchMoviesByQuery(searchQueryValue).then(resp => {
     const listMovies = resp.results;
-    const gallery = listMovies.map(movie => `<li class="cinema-gallery__item">
-        <div class="thumb-img">
-          <img class="cinema-gallery__img img" src="https://image.tmdb.org/t/p/w500${movie.poster_path || movie.backdrop_path}" id="${movie.id}" loading="lazy">
-           <div class="button-wrap">
-            <button class="button button-watched" id="${movie.id}">Watched</button>
-            <button class="button button-queue" id="${movie.id}">Queue</button>
-            <button class="button button-delete" id="${movie.id}">Delete</button>
-          </div>
-        </div>
-        <div class="thumb-text">
-          <p class="cinema-gallery__name">${movie.name || movie.title}</p>
-          <p class="cinema-gallery__text">${movie.genre_ids} | ${movie.release_date || movie.first_air_date || ' '}</p>
-        </div>`);    
-    refs.galleryListEl.innerHTML = gallery;    
-    })
-  
+    renderNewGallery(listMovies);
+  });
 }
 
-
-
-function fetchMovie(media) {
-  fetch(`https://api.themoviedb.org/3/trending/${media}/day?api_key=c54b9b3bc824900bd0fc655039f09ff1`).then(resp => resp.json()).then(resp => {
+function fetchMovie(mediaValue) {
+  const media = mediaValue;
+  fetchMoviesByMedia(media).then(resp => {
     const listMovies = resp.results;
-    const gallery = listMovies.map(movie => `<li class="cinema-gallery__item">
-        <div class="thumb-img">
-          <img class="cinema-gallery__img img" src=" https://image.tmdb.org/t/p/w500${movie.poster_path}" id="${movie.id}" loading="lazy">
-           <div class="button-wrap">
-            <button class="button button-watched" id="${movie.id}">Watched</button>
-            <button class="button button-queue" id="${movie.id}">Queue</button>
-              <button class="button button-delete" id="${movie.id}">Delete</button>
-          </div>
-        </div>
-        <div class="thumb-text">
-          <p class="cinema-gallery__name">${movie.name || movie.title}</p>
-          <p class="cinema-gallery__text">${movie.genre_ids} | ${movie.release_date || movie.first_air_date || 'soon'}</p>
-        </div>`);    
-    refs.galleryListEl.innerHTML = gallery;
-    paginationMovies();
+    renderNewGallery(listMovies);
+    // paginationMovies();
   })
-}
-function onLibraryPageLinkEl(e) {
-  e.preventDefault();
-  document.querySelector("header").classList.add("page-header--library");
- 
-  function onLidBtn() {
-    console.log("it's work");
-  }
-  refs.homePageLinkEl.classList.remove("home-link--current");
-  refs.libraryPageLinkEl.classList.add("library-link--current"); 
-  refs.searhFormEl.innerHTML = libraryPage;
-
-  const localMovies = JSON.parse(localStorage.getItem("watchedList"));
-  console.log(localMovies);
-  if (localMovies === null) {
-    renderEmptyGallery();
-  } else {
-    renderGallery(localMovies);
-  }
-  document.querySelector(".library-button--watched").addEventListener('click', onLidBtn)
 }
 
 function onHomePageLinkEl(e) {
@@ -106,44 +54,85 @@ function onHomePageLinkEl(e) {
   fetchMovie("movie")
 }
 
+function onLibraryPageLinkEl(e) {
+  e.preventDefault();
+  document.querySelector("header").classList.add("page-header--library");
+  refs.homePageLinkEl.classList.remove("home-link--current");
+  refs.libraryPageLinkEl.classList.add("library-link--current"); 
+  refs.searhFormEl.innerHTML = libraryPage;
+
+  const localMovies = JSON.parse(localStorage.getItem("watchedList"));
+  console.log(localMovies);
+  if (localMovies === null) {
+    renderEmptyGallery();
+  } else {
+    renderNewGallery(localMovies);
+  }
+  document.querySelector(".library-button--watched").addEventListener('click', onLibBtnWatched)
+  document.querySelector(".library-button--queue").addEventListener('click', onLibBtnQueue)
+}
+function onLibBtnWatched() {
+  console.log("it's work, wathed");
+  document.querySelector(".library-button--queue").classList.remove("library-button--active");
+  document.querySelector(".library-button--watched").classList.add("library-button--active");
+  const localMovies = JSON.parse(localStorage.getItem("watchedList"));
+  if (localMovies === null) {
+      renderEmptyGallery();
+    } else {
+      renderNewGallery(localMovies, 'watched');
+  }
+
+}
+
+function onLibBtnQueue() {
+  console.log('queue')
+  document.querySelector(".library-button--queue").classList.add("library-button--active");
+  document.querySelector(".library-button--watched").classList.remove("library-button--active");
+  const localMovies = JSON.parse(localStorage.getItem("queueList"));
+    if (localMovies === null) {
+      renderEmptyGallery();
+    } else {
+      renderNewGallery(localMovies, 'queue');
+    }
+}
+
+
+
 document.querySelector("body").addEventListener("click", onBody);
 
 function onBody(e) {
    e.preventDefault();
-  if (e.target.classList.contains("library-button--queue")) {
-    e.target.classList.add("library-button--active")
-    e.target.previousElementSibling.classList.remove("library-button--active");
-    const localMovies = JSON.parse(localStorage.getItem("queueList"));
-    if (localMovies === null) {
-      renderEmptyGallery();
-    } else {
-      renderGallery(localMovies);
-    }
-  }
-  if (e.target.classList.contains("library-button--watched")) {
-    e.target.classList.add("library-button--active")
-    e.target.nextElementSibling.classList.remove("library-button--active");
-    const localMovies = JSON.parse(localStorage.getItem("watchedList"));
-    if (localMovies === null) {
-      renderEmptyGallery();
-    } else {
-      renderGallery(localMovies);
-    }
-  }
-   if (e.target.classList.contains("button-delete")) {
+  // if (e.target.classList.contains("library-button--queue")) {
+  //   // e.target.classList.add("library-button--active")
+  //   // e.target.previousElementSibling.classList.remove("library-button--active");
+  //   // const localMovies = JSON.parse(localStorage.getItem("queueList"));
+  //   // if (localMovies === null) {
+  //   //   renderEmptyGallery();
+  //   // } else {
+  //   //   renderNewGallery(localMovies);
+  //   // }
+  // }
+  // if (e.target.classList.contains("library-button--watched")) {
+  //   // e.target.classList.add("library-button--active")
+  //   // e.target.nextElementSibling.classList.remove("library-button--active");
+  //   // const localMovies = JSON.parse(localStorage.getItem("watchedList"));
+  //   // if (localMovies === null) {
+  //   //   renderEmptyGallery();
+  //   // } else {
+  //   //   renderNewGallery(localMovies);
+  //   // }
+  // }
+   if (e.target.classList.contains("button-watched-delete")) {
      let localMovies = JSON.parse(localStorage.getItem("watchedList"));
-     console.log('delete e:', e.currentTarget.children)
-     console.log(localMovies);
      localMovies = localMovies.filter((movie) => movie.id != e.target.id);
      localStorage.setItem("watchedList", JSON.stringify(localMovies));
      localMovies = JSON.parse(localStorage.getItem("watchedList"));
-
-     console.log(localMovies);
-    if (localMovies === null) {
-      renderEmptyGallery();
-    } else {
-      renderGallery(localMovies);
-    }
+  }
+   if (e.target.classList.contains("button-queue-delete")) {
+     let localMovies = JSON.parse(localStorage.getItem("queueList"));
+     localMovies = localMovies.filter((movie) => movie.id != e.target.id);
+     localStorage.setItem("queueList", JSON.stringify(localMovies));
+     localMovies = JSON.parse(localStorage.getItem("queueList"));
   }
 
   if (e.target.classList.contains("button-watched")) {
@@ -151,54 +140,31 @@ function onBody(e) {
     const localWatchedList = JSON.parse(localStorage.getItem("watchedList"));
     localWatchedList === null ? localWatchedList : watchedList = [...localWatchedList];    
     if (!(watchedList.find(item => item.id == e.target.id) && true) || false) {
-      fetch(`https://api.themoviedb.org/3/movie/${e.target.id}?api_key=c54b9b3bc824900bd0fc655039f09ff1&language=en-US`)
-        .then(resp => resp.json())
+      fetchMovieById(e.target.id)
         .then(resp => {
           watchedList.push(resp);      
           localStorage.setItem("watchedList", JSON.stringify(watchedList));
         })
     }
-  }
-  
+    instance.show();
+  }  
 
   if (e.target.classList.contains("button-queue")) {
-    console.log(e.target.id);
      const localQueueList = JSON.parse(localStorage.getItem("queueList"));
     localQueueList === null ? localQueueList : queueList = [...localQueueList]; 
     // queueList = [ ...JSON.parse(localStorage.getItem("queueList"))]
     if (!(queueList.find(item => item.id == e.target.id) && true) || false) {
-      fetch(`https://api.themoviedb.org/3/movie/${e.target.id}?api_key=c54b9b3bc824900bd0fc655039f09ff1&language=en-US`).then(resp => resp.json()).then(resp => {
+      fetchMovieById(e.target.id).then(resp => {
         queueList.push(resp);
         localStorage.setItem("queueList", JSON.stringify(queueList));
       })
     }
   }
 }
-
-function renderGallery(movies) {
-      const gallery = movies.map(movie => `<li class="cinema-gallery__item">
-       <div class="thumb-img">
-          <img class="cinema-gallery__img img" src=" https://image.tmdb.org/t/p/w500${movie.poster_path}" id="${movie.id} loading="lazy">
-          <div class="button-wrap">
-            <button class="button button-watched" id="${movie.id}">Watched</button>
-            <button class="button button-queue" id="${movie.id}">Queue</button>
-            <button class="button button-delete" id="${movie.id}">delete</button>
-          </div>
-      </div>
-       <div class="thumb-text">
-          <p class="cinema-gallery__name">${movie.name || movie.title}</p>
-         <p class="cinema-gallery__text">${movie.genres.map(genre => genre.name) } | ${movie.release_date || movie.first_air_date}</p>
-        </div>`);
-  refs.galleryListEl.innerHTML = gallery;
-}
-function renderEmptyGallery() {
-  const gallery = `<li class="cinema-gallery__item">Empty LocalStorage</li>`;
-  refs.galleryListEl.innerHTML = gallery;
-}
-
-
-// import fetch from "./js/filmoteka.js";
 localStorage.removeItem("watchedList")
 localStorage.removeItem("queueList")
 
-// fetch();
+
+
+
+

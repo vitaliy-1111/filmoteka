@@ -1,6 +1,6 @@
 import Pagination from 'tui-pagination';
 import 'tui-pagination/dist/tui-pagination.css';
-import {refs} from '../index.js';
+import {refs} from './refs.js';
 // export function tuiPagination() {
 //   const container = document.getElementById('tui-pagination-container');
 //   const options = {
