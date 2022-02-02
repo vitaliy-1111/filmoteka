@@ -3,22 +3,21 @@ import './sass/main.scss';
 import 'basiclightbox/dist/basicLightbox.min.css';
 import './js/genres.js';
 
-import * as basicLightbox from 'basiclightbox';
+// import * as basicLightbox from 'basiclightbox';
 import { paginationMovies, paginationSearchMovies } from './js/pagination.js';
 import { fetchMoviesByQuery, fetchMoviesByMedia, fetchMovieById } from './js/fetch.js';
 import debounce from 'lodash.debounce';
 // import './js/filmoteka.js';
-import { homePage, libraryPage } from './js/template.js';
+import { homePage, libraryPage, modalMovie } from './js/template.js';
 import { refs } from './js/refs.js';
 import { renderNewGallery, renderEmptyGallery } from './js/render.js';
+import { modalOpen } from './js/modal';
 
 let watchedList = [];
 let queueList = [];
 
-const instance = basicLightbox.create(`
-	<h1>Dynamic Content</h1>
-	<p>You can set the content of the lightbox with JS.</p>
-`);
+modalOpen();
+// const instance = basicLightbox.create(modalMovie);
 
 refs.libraryPageLinkEl.addEventListener("click", onLibraryPageLinkEl);
 refs.homePageLinkEl.addEventListener("click", onHomePageLinkEl);
@@ -102,26 +101,6 @@ document.querySelector("body").addEventListener("click", onBody);
 
 function onBody(e) {
    e.preventDefault();
-  // if (e.target.classList.contains("library-button--queue")) {
-  //   // e.target.classList.add("library-button--active")
-  //   // e.target.previousElementSibling.classList.remove("library-button--active");
-  //   // const localMovies = JSON.parse(localStorage.getItem("queueList"));
-  //   // if (localMovies === null) {
-  //   //   renderEmptyGallery();
-  //   // } else {
-  //   //   renderNewGallery(localMovies);
-  //   // }
-  // }
-  // if (e.target.classList.contains("library-button--watched")) {
-  //   // e.target.classList.add("library-button--active")
-  //   // e.target.nextElementSibling.classList.remove("library-button--active");
-  //   // const localMovies = JSON.parse(localStorage.getItem("watchedList"));
-  //   // if (localMovies === null) {
-  //   //   renderEmptyGallery();
-  //   // } else {
-  //   //   renderNewGallery(localMovies);
-  //   // }
-  // }
    if (e.target.classList.contains("button-watched-delete")) {
      let localMovies = JSON.parse(localStorage.getItem("watchedList"));
      localMovies = localMovies.filter((movie) => movie.id != e.target.id);
@@ -146,7 +125,8 @@ function onBody(e) {
           localStorage.setItem("watchedList", JSON.stringify(watchedList));
         })
     }
-    instance.show();
+    // instance.show();
+    
   }  
 
   if (e.target.classList.contains("button-queue")) {

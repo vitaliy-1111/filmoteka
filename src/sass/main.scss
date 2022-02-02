@@ -4,6 +4,8 @@
  */
 // @include './header';
 @import './utils/hidden';
+@import './utils/mixins';
+
 @import './utils/_variables';
 @import './base/normalize';
 @import './base/reset';
@@ -13,18 +15,6 @@
 @import './layout/header';
 @import './layout/gallery';
 @import './layout/footer';
-.delete-modal {
-  background-color: #fff;
-  border-radius: 5px;
-  padding: 20px;
-}
-
-.loading-modal {
-  background-color: #fff;
-  padding: 10px 100px;
-  border-radius: 5px;
-}
-
-.basicLightbox {
-  background-color: rgba(0, 0, 0, 0.1);
-}
+@import './components/modal';
+@import './components/backdrop';
+@import './layout/modalMovie';
