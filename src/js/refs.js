@@ -9,5 +9,10 @@ export const refs = {
   searhFormEl: document.querySelector("form.search-form"),
   gallery: document.querySelector(".cinema-gallery"),
   galleryListEl: document.querySelector(".cinema-gallery__list"),
-  
+  modalMovie: document.querySelector(".modal-movie"),
+  openModalBtn: document.querySelector('[data-modal-open]'),
+  closeModalBtn: document.querySelector('[data-modal-close]'),
+  modal: document.querySelector('[data-modal]'),
+  queueButtonEl: document.querySelector('.button-queue'),
+  watchedButtonEl: document.querySelector('.button-watched'),
 }

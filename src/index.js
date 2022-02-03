@@ -5,18 +5,19 @@ import './js/genres.js';
 
 // import * as basicLightbox from 'basiclightbox';
 import { paginationMovies, paginationSearchMovies } from './js/pagination.js';
-import { fetchMoviesByQuery, fetchMoviesByMedia, fetchMovieById } from './js/fetch.js';
+import { fetchMoviesByQuery, fetchMoviesByMedia, fetchMovieById,  fetchMovieDetails } from './js/fetch.js';
 import debounce from 'lodash.debounce';
 // import './js/filmoteka.js';
 import { homePage, libraryPage, modalMovie } from './js/template.js';
 import { refs } from './js/refs.js';
-import { renderNewGallery, renderEmptyGallery } from './js/render.js';
-import { modalOpen } from './js/modal';
+import { renderNewGallery, renderEmptyGallery, renderModalMovie } from './js/render.js';
+import { modalOpen } from './js/modal.js';
+
 
 let watchedList = [];
 let queueList = [];
 
-modalOpen();
+// modalOpen();
 // const instance = basicLightbox.create(modalMovie);
 
 refs.libraryPageLinkEl.addEventListener("click", onLibraryPageLinkEl);
@@ -95,8 +96,6 @@ function onLibBtnQueue() {
     }
 }
 
-
-
 document.querySelector("body").addEventListener("click", onBody);
 
 function onBody(e) {
@@ -114,31 +113,122 @@ function onBody(e) {
      localMovies = JSON.parse(localStorage.getItem("queueList"));
   }
 
-  if (e.target.classList.contains("button-watched")) {
-    console.log(JSON.parse(localStorage.getItem("watchedList")))
-    const localWatchedList = JSON.parse(localStorage.getItem("watchedList"));
-    localWatchedList === null ? localWatchedList : watchedList = [...localWatchedList];    
-    if (!(watchedList.find(item => item.id == e.target.id) && true) || false) {
-      fetchMovieById(e.target.id)
-        .then(resp => {
-          watchedList.push(resp);      
-          localStorage.setItem("watchedList", JSON.stringify(watchedList));
-        })
-    }
-    // instance.show();
+  // if (e.target.classList.contains("button-watched")) {
+  //   console.log(JSON.parse(localStorage.getItem("watchedList")))
+  //   const localWatchedList = JSON.parse(localStorage.getItem("watchedList"));
+  //   localWatchedList === null ? localWatchedList : watchedList = [...localWatchedList];    
+  //   if (!(watchedList.find(item => item.id == e.target.id) && true) || false) {
+  //     fetchMovieById(e.target.id)
+  //       .then(resp => {
+  //         watchedList.push(resp);      
+  //         localStorage.setItem("watchedList", JSON.stringify(watchedList));
+  //       })
+  //   }
+  //   // instance.show();
     
-  }  
+  // }  
 
-  if (e.target.classList.contains("button-queue")) {
-     const localQueueList = JSON.parse(localStorage.getItem("queueList"));
-    localQueueList === null ? localQueueList : queueList = [...localQueueList]; 
-    // queueList = [ ...JSON.parse(localStorage.getItem("queueList"))]
-    if (!(queueList.find(item => item.id == e.target.id) && true) || false) {
-      fetchMovieById(e.target.id).then(resp => {
-        queueList.push(resp);
-        localStorage.setItem("queueList", JSON.stringify(queueList));
-      })
-    }
+  // if (e.target.classList.contains("button-queue")) {
+  //    const localQueueList = JSON.parse(localStorage.getItem("queueList"));
+  //   localQueueList === null ? localQueueList : queueList = [...localQueueList]; 
+  //   // queueList = [ ...JSON.parse(localStorage.getItem("queueList"))]
+  //   if (!(queueList.find(item => item.id == e.target.id) && true) || false) {
+  //     fetchMovieById(e.target.id).then(resp => {
+  //       queueList.push(resp);
+  //       localStorage.setItem("queueList", JSON.stringify(queueList));
+  //     })
+  //   }
+  // }
+  if (e.target.classList.contains("cinema-gallery__img")) {
+    console.log('img')
+    console.log(e.target.id)
+    fetchMovieDetails(e.target.id).then(resp => {
+      console.log(resp);
+      renderModalMovie(resp); 
+      refs.modal.classList.toggle('is-hidden');
+      refs.modal.classList.toggle('backdrop--is-hidden');
+      document.querySelector('body').style.overflow = "hidden";
+      document.body.addEventListener('click', onQueueButton)
+      function onQueueButton(event) {
+        if (event.target.classList.contains('button-queue')) {
+          console.log('yes queue')
+          const localQueueList = JSON.parse(localStorage.getItem("queueList"));
+          localQueueList === null ? localQueueList : queueList = [...localQueueList];
+          // queueList = [ ...JSON.parse(localStorage.getItem("queueList"))]
+          if (!(queueList.find(item => item.id == e.target.id) && true) || false) {
+            fetchMovieById(e.target.id).then(resp => {
+              queueList.push(resp);
+              localStorage.setItem("queueList", JSON.stringify(queueList));
+            })
+          }
+        }
+          if (event.target.classList.contains('button-watched')) {
+            console.log('yes wathed')
+            console.log(JSON.parse(localStorage.getItem("watchedList")))
+                const localWatchedList = JSON.parse(localStorage.getItem("watchedList"));
+                localWatchedList === null ? localWatchedList : watchedList = [...localWatchedList];    
+            if (!(watchedList.find(item => item.id == e.target.id) && true) || false) {
+              fetchMovieById(e.target.id)
+                .then(resp => {
+                  watchedList.push(resp);
+                  localStorage.setItem("watchedList", JSON.stringify(watchedList));
+                })
+            }
+            
+
+          }
+
+        }
+      
+     
+    
+      
+  //     const refs1 = {
+  // //   openModalBtn: document.querySelector('[data-modal-open]'),
+  // //   closeModalBtn: document.querySelector('[data-modal-close]'),
+  // //   modal: document.querySelector('[data-modal]'),
+  //  queueButtonEl: document.querySelector('.button-queue'),
+  //   watchedButtonEl: document.querySelector('.button-watched')
+  //     };
+  //      let queueList = [];
+  // let watchedList = [];
+  //     refs1.queueButtonEl.addEventListener('click', onQueueButtonEl);
+  // refs1.watchedButtonEl.addEventListener('click', onWatchedButtonEl);
+
+  // function onQueueButtonEl(movie_id) {
+  //    const localQueueList = JSON.parse(localStorage.getItem("queueList"));
+  //   localQueueList === null ? localQueueList : queueList = [...localQueueList]; 
+  //   // queueList = [ ...JSON.parse(localStorage.getItem("queueList"))]
+  //   if (!(queueList.find(item => item.id == movie_id) && true) || false) {
+  //     fetchMovieById(movie_id).then(resp => {
+  //       queueList.push(resp);
+  //       localStorage.setItem("queueList", JSON.stringify(queueList));
+  //     })
+  //   }
+  // }
+  // onQueueButtonEl(e.target.id);
+
+  // function onWatchedButtonEl(movie_id) {
+  //     console.log(JSON.parse(localStorage.getItem("watchedList")))
+  //   const localWatchedList = JSON.parse(localStorage.getItem("watchedList"));
+  //   localWatchedList === null ? localWatchedList : watchedList = [...localWatchedList];    
+  //   if (!(watchedList.find(item => item.id == movie_id) && true) || false) {
+  //     fetchMovieById(movie_id)
+  //       .then(resp => {
+  //         watchedList.push(resp);      
+  //         localStorage.setItem("watchedList", JSON.stringify(watchedList));
+  //       })
+  //   }
+  // }
+  // onWatchedButtonEl(e.target.id);
+      modalOpen(e.target.id);      
+    }).then(console.log);
+    
+     // refs.modal.classList.toggle('is-hidden');
+    // refs.modal.classList.toggle('backdrop--is-hidden');
+    // document.querySelector('body').style.overflow = "hidden";
+    // modalOpen();
+
   }
 }
 localStorage.removeItem("watchedList")
