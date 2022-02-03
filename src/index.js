@@ -32,7 +32,7 @@ function onSearhFormInput(e) {
   // paginationSearchMovies(e.target.value)
   fetchMoviesByQuery(searchQueryValue).then(resp => {
     const listMovies = resp.results;
-    renderNewGallery(listMovies);
+    renderHomeGallery(listMovies);
   });
 }
 
