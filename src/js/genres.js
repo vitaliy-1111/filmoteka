@@ -1,4 +1,4 @@
-export const genre = [
+export const movieGenre = [
 {id: 28, name: 'Action'},
 {id: 12, name: 'Adventure'},
 {id: 16, name: 'Animation'},
@@ -19,3 +19,14 @@ export const genre = [
 {id: 10752, name: 'War'},
 {id: 37, name: 'Western'},
 ]
+export function genreIdToName(arrayIdGenres, movieGenres) {
+  const genreArr = [];
+  arrayIdGenres.map(id => {
+    for (const genre of movieGenres) {
+      if (genre.id === id) {
+        genreArr.push(genre.name);
+      }
+    }
+  })
+  return genreArr.join(' ');
+}

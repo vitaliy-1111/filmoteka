@@ -1,7 +1,7 @@
 
 import './sass/main.scss';
 import 'basiclightbox/dist/basicLightbox.min.css';
-import './js/genres.js';
+import { movieGenre} from './js/genres.js';
 
 // import * as basicLightbox from 'basiclightbox';
 import { paginationMovies, paginationSearchMovies } from './js/pagination.js';
@@ -10,7 +10,7 @@ import debounce from 'lodash.debounce';
 // import './js/filmoteka.js';
 import { homePage, libraryPage, modalMovie } from './js/template.js';
 import { refs } from './js/refs.js';
-import { renderNewGallery, renderEmptyGallery, renderModalMovie } from './js/render.js';
+import { renderHomeGallery, renderLibraryGallery, renderEmptyGallery, renderModalMovie } from './js/render.js';
 import { modalOpen } from './js/modal.js';
 
 
@@ -39,8 +39,9 @@ function onSearhFormInput(e) {
 function fetchMovie(mediaValue) {
   const media = mediaValue;
   fetchMoviesByMedia(media).then(resp => {
+    console.log(resp)
     const listMovies = resp.results;
-    renderNewGallery(listMovies);
+    renderHomeGallery(listMovies);
     // paginationMovies();
   })
 }
@@ -66,7 +67,7 @@ function onLibraryPageLinkEl(e) {
   if (localMovies === null) {
     renderEmptyGallery();
   } else {
-    renderNewGallery(localMovies);
+    renderLibraryGallery(localMovies);
   }
   document.querySelector(".library-button--watched").addEventListener('click', onLibBtnWatched)
   document.querySelector(".library-button--queue").addEventListener('click', onLibBtnQueue)
@@ -79,7 +80,7 @@ function onLibBtnWatched() {
   if (localMovies === null) {
       renderEmptyGallery();
     } else {
-      renderNewGallery(localMovies, 'watched');
+      renderLibraryGallery(localMovies, 'watched');
   }
 
 }
@@ -92,7 +93,7 @@ function onLibBtnQueue() {
     if (localMovies === null) {
       renderEmptyGallery();
     } else {
-      renderNewGallery(localMovies, 'queue');
+      renderLibraryGallery(localMovies, 'queue');
     }
 }
 
@@ -233,8 +234,5 @@ function onBody(e) {
 }
 localStorage.removeItem("watchedList")
 localStorage.removeItem("queueList")
-
-
-
 
 

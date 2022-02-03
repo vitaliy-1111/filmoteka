@@ -1,19 +1,37 @@
 import { refs } from './refs.js';
+import { movieGenre, genreIdToName } from './genres.js';
 
 
-export function renderNewGallery(listMovies, library = "none") {
-     const gallery = listMovies.map(movie => `<li class="cinema-gallery__item">
+export function renderHomeGallery(listMovies,) {
+  const gallery = listMovies.map(movie => {
+    const genreName = genreIdToName(movie.genre_ids, movieGenre);
+    return `<li class="cinema-gallery__item">
         <div class="thumb-img">
-          <img class="cinema-gallery__img img" src=" https://image.tmdb.org/t/p/w500${movie.poster_path}" id="${movie.id}" loading="lazy data-modal-open">
+          <img class="cinema-gallery__img img" src="https://image.tmdb.org/t/p/w500${movie.poster_path}" id="${movie.id}" loading="lazy data-modal-open">
         
         </div>
         <div class="thumb-text">
           <p class="cinema-gallery__name">${movie.name || movie.title}</p>
-          <p class="cinema-gallery__text">${movie.genre_ids} | ${movie.release_date || movie.first_air_date || ' '}</p>
-        </div>`);    
-  refs.galleryListEl.innerHTML = gallery;
-  
+          <p class="cinema-gallery__text">${genreName} | ${movie.release_date || movie.first_air_date || ' '}</p>
+        </div>`});    
+  refs.galleryListEl.innerHTML = gallery.join(''); 
 }
+export function renderLibraryGallery(listMovies,) {
+  const gallery = listMovies.map(movie => {
+    return `<li class="cinema-gallery__item">
+        <div class="thumb-img">
+          <img class="cinema-gallery__img img" src="https://image.tmdb.org/t/p/w500${movie.poster_path}" id="${movie.id}" loading="lazy data-modal-open">
+        
+        </div>
+        <div class="thumb-text">
+          <p class="cinema-gallery__name">${movie.name || movie.title}</p>
+          <p class="cinema-gallery__text">${movie.genres.map(genre => genre.name)} | ${movie.release_date || movie.first_air_date || ' '}</p>
+        </div>`});    
+  refs.galleryListEl.innerHTML = gallery.join(''); 
+}
+
+
+
 export function renderEmptyGallery() {
   const gallery = `<li class="cinema-gallery__item">Empty LocalStorage</li>`;
   refs.galleryListEl.innerHTML = gallery;
@@ -28,7 +46,7 @@ export function renderModalMovie(movie) {
           <p class="info-title">Vote / Votes<span class="info-text">${movie.vote_average} / ${movie.vote_count}</span></p>
           <p class="info-title">Popularity<span class="info-text">${movie.popularity}</span></p>
           <p class="info-title">Original Title<span class="info-text">${movie.original_title}</span></p>
-          <p class="info-title">Jenre<span class="info-text">${movie.genres}</span></p>
+          <p class="info-title">Jenre<span class="info-text">${movie.genres.map(genre => genre.name)}</span></p>
           <h3 class="modal-movie__about">About</h3>
           <p class="about-text">${movie.overview}
           </p>
