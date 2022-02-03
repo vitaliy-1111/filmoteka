@@ -42,7 +42,7 @@ export function renderModalMovie(movie) {
           <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="title" id="${movie.id}">
         </div>
         <div class="modal-movie__text-wrap">
-          <h2 class="movie-title">Title</h2>
+          <h2 class="movie-title">${movie.title}</h2>
           <p class="info-title">Vote / Votes<span class="info-text">${movie.vote_average} / ${movie.vote_count}</span></p>
           <p class="info-title">Popularity<span class="info-text">${movie.popularity}</span></p>
           <p class="info-title">Original Title<span class="info-text">${movie.original_title}</span></p>
