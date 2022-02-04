@@ -98,7 +98,12 @@
     display: block;
   }
 }
-
+.logo-link {
+  color: $color-header-text;
+  &--icon {
+    line-height: 0;
+  }
+}
 .home-link,
 .library-link {
   position: relative;

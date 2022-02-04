@@ -22,6 +22,8 @@ let queueList = [];
 
 refs.libraryPageLinkEl.addEventListener("click", onLibraryPageLinkEl);
 refs.homePageLinkEl.addEventListener("click", onHomePageLinkEl);
+refs.logoPageLinkEl.addEventListener("click", onHomePageLinkEl);
+refs.logoIconPageLinkEl.addEventListener("click", onHomePageLinkEl);
 refs.searhFormEl.addEventListener('input', debounce((onSearhFormInput), 1000));
 
 fetchMovie("movie");

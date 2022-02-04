@@ -2,8 +2,13 @@
 export const refs = {
   homePageLinkEl: document.querySelector("a.home-link"),
   libraryPageLinkEl: document.querySelector("a.library-link"),
+  logoPageLinkEl: document.querySelector('.logo-link--title'),
+  logoIconPageLinkEl: document.querySelector('.logo-link--icon'),
+
   headerEl: document.querySelector("header.page-header"),
+
   body: document.querySelector("body"),
+
   textSearchResult: document.querySelector("p.search-result-text"),
   nav: document.querySelector("nav.nav"),
   searhFormEl: document.querySelector("form.search-form"),
