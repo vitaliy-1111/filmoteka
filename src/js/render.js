@@ -10,8 +10,10 @@ export function renderHomeGallery(listMovies) {
     }
     return `<li class="cinema-gallery__item">
         <div class="thumb-img">
+         <div class="backdrop-card">
           <img class="cinema-gallery__img img" src="https://image.tmdb.org/t/p/w500${movie.poster_path}"
            id="${movie.id}" alt="poster ${movie.name || movie.title}" loading="lazy data-modal-open">
+         </div>  
         </div>
         <div class="thumb-text">
           <p class="cinema-gallery__name">${movie.name || movie.title}</p>
