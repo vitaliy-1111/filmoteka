@@ -7,7 +7,7 @@
   border-radius: 5px;
   text-transform: uppercase;
   cursor: pointer;
-  @include transition-base(background-color);
+  @include transition-base(background-color, box-shadow);
 
   &:hover,
   :focus {

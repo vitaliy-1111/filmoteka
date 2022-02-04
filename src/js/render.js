@@ -6,18 +6,19 @@ export function renderHomeGallery(listMovies) {
   const gallery = listMovies.map(movie => {
     const genreName = genreIdToName(movie.genre_ids, movieGenre);
     if (movie.release_date === '') {
-      return movie.release_date = 'no date';
+      movie.release_date = 'date';
     }
     return `<li class="cinema-gallery__item">
         <div class="thumb-img">
           <img class="cinema-gallery__img img" src="https://image.tmdb.org/t/p/w500${movie.poster_path}"
            id="${movie.id}" alt="poster ${movie.name || movie.title}" loading="lazy data-modal-open">
-        
         </div>
         <div class="thumb-text">
           <p class="cinema-gallery__name">${movie.name || movie.title}</p>
-          <p class="cinema-gallery__text">${genreName} | ${movie.release_date || movie.first_air_date || ' '}</p>
-        </div>`});    
+          <p class="cinema-gallery__text">${genreName} |
+           ${movie.release_date.slice(0, 4) || movie.first_air_date.slice(0, 4) || ' '}
+          </p>
+        </div></li>`});    
   refs.galleryListEl.innerHTML = gallery.join(''); 
 }
 
@@ -27,12 +28,14 @@ export function renderLibraryGallery(listMovies) {
         <div class="thumb-img">
           <img class="cinema-gallery__img img" src="https://image.tmdb.org/t/p/w500${movie.poster_path}"
            id="${movie.id}" alt="poster ${movie.name || movie.title}" loading="lazy data-modal-open">
-        
         </div>
         <div class="thumb-text">
           <p class="cinema-gallery__name">${movie.name || movie.title}</p>
-          <p class="cinema-gallery__text">${movie.genres.map(genre => genre.name).join(' ')} | ${movie.release_date.slice(0, 4) || movie.first_air_date.slice(0, 4) || ' '}</p>
-        </div>`});    
+          <p class="cinema-gallery__text">${movie.genres.map(genre => genre.name).join(' ')} |
+           ${movie.release_date.slice(0, 4) || movie.first_air_date.slice(0, 4) || ' '}
+           <span class="cinema-gallery__average">${movie.vote_average || "10"}</span>
+          </p>
+        </div></li>`});    
   refs.galleryListEl.innerHTML = gallery.join(''); 
 }
 

@@ -4,3 +4,6 @@
   border: 1px solid $color-accent;
   border-left: 1px solid $color-accent;
 }
+.tui-pagination .tui-is-selected:hover {
+  background-color: $color-accent;
+}

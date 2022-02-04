@@ -1,15 +1,14 @@
 
+import 'tui-pagination/dist/tui-pagination.css';
 import './sass/main.scss';
 import { movieGenre } from './js/genres.js';
 
 import Pagination from 'tui-pagination';
-import 'tui-pagination/dist/tui-pagination.css';
-// import { paginationMovies, paginationSearchMovies } from './js/pagination.js';
-import { fetchMoviesByQuery, fetchMoviesByMedia, fetchMovieById,  fetchMovieDetails } from './js/fetch.js';
 import debounce from 'lodash.debounce';
-// import './js/filmoteka.js';
-import { homePage, libraryPage, modalMovie } from './js/template.js';
+
 import { refs } from './js/refs.js';
+import { homePage, libraryPage, modalMovie } from './js/template.js';
+import { fetchMoviesByQuery, fetchMoviesByMedia, fetchMovieById,  fetchMovieDetails } from './js/fetch.js';
 import { renderHomeGallery, renderLibraryGallery, renderEmptyGallery, renderModalMovie } from './js/render.js';
 import { modalOpen } from './js/modal.js';
 
@@ -68,6 +67,7 @@ function onSearhFormInput(event) {
 
 function onHomePageLinkEl(e) {
   e.preventDefault();
+  refs.paginationContainerEl.classList.remove("visually-hidden");
   document.querySelector("header").classList.remove("page-header--library");
   refs.libraryPageLinkEl.classList.remove("library-link--current");
   refs.homePageLinkEl.classList.add("home-link--current");
@@ -78,17 +78,23 @@ function onHomePageLinkEl(e) {
 
 function onLibraryPageLinkEl(e) {
   e.preventDefault();
+  refs.paginationContainerEl.classList.add("visually-hidden");
   document.querySelector("header").classList.add("page-header--library");
   refs.homePageLinkEl.classList.remove("home-link--current");
   refs.libraryPageLinkEl.classList.add("library-link--current"); 
   refs.searhFormEl.innerHTML = libraryPage;
-
+  // console.log('library',e.currentTarget);
+  // if (e.target.classList.contains("cinema-gallery__img")) {
+  //   console.log('library', e.target.id)
+  // }
+  
   const localMovies = JSON.parse(localStorage.getItem("watchedList"));
   console.log(localMovies);
   if (localMovies === null) {
     renderEmptyGallery();
   } else {
     renderLibraryGallery(localMovies);
+    console.log(localMovies)
   }
   document.querySelector(".library-button--watched").addEventListener('click', onLibBtnWatched)
   document.querySelector(".library-button--queue").addEventListener('click', onLibBtnQueue)
@@ -121,7 +127,7 @@ function onLibBtnQueue() {
 function addMovieToQueueLocalStorage(id) {
   const localQueueList = JSON.parse(localStorage.getItem("queueList"));
   localQueueList === null ? localQueueList : queueList = [...localQueueList];
-  // queueList = [ ...JSON.parse(localStorage.getItem("queueList"))]
+
   if (!(queueList.find(item => item.id == id) && true) || false) {
     fetchMovieById(id).then(resp => {
       queueList.push(resp);
@@ -132,10 +138,10 @@ function addMovieToQueueLocalStorage(id) {
 function addMovieToWatchedLocalStorage(id) {
   console.log(JSON.parse(localStorage.getItem("watchedList")))
   const localWatchedList = JSON.parse(localStorage.getItem("watchedList"));
-  localWatchedList === null ? localWatchedList : watchedList = [...localWatchedList];    
+  localWatchedList === null ? localWatchedList : watchedList = [...localWatchedList];
+  
   if (!(watchedList.find(item => item.id == id) && true) || false) {
-    fetchMovieById(id)
-    .then(resp => {
+    fetchMovieById(id).then(resp => {
       watchedList.push(resp);
       localStorage.setItem("watchedList", JSON.stringify(watchedList));
     })
@@ -159,43 +165,50 @@ function onBody(e) {
       document.querySelector('.button-watched').addEventListener('click', onWatchedButton)
       document.querySelector('.button-queue-delete').addEventListener('click', onDeleteQueueButton)
       document.querySelector('.button-watched-delete').addEventListener('click', onDeleteWatchedButton)
+      
+
+      
+      const localWatchedList = JSON.parse(localStorage.getItem("watchedList"));
+      localWatchedList === null ? localWatchedList : watchedList = [...localWatchedList];    
+       if ((watchedList.find(item => item.id == e.target.id) && true) || false) {
+         document.querySelector('.button-watched').textContent = "is on your watched list";
+       } 
+
+      const localQueueList = JSON.parse(localStorage.getItem("queueList"));
+      localQueueList === null ? localQueueList : queueList = [...localQueueList];
+       if ((queueList.find(item => item.id == e.target.id) && true) || false) {
+        document.querySelector('.button-queue').textContent = "is on your queue list";
+       } 
 
       function onQueueButton(event) {
         if (event.target.classList.contains('button-queue')) {
-             addMovieToQueueLocalStorage(e.target.id);
-           }
-          }
-        
-            function onWatchedButton(event) {
-              if (event.target.classList.contains('button-watched')) {
-                addMovieToWatchedLocalStorage(e.target.id)
-              }
+          addMovieToQueueLocalStorage(e.target.id);
+        }
       }
-      function onDeleteWatchedButton(event) {
+        
+      function onWatchedButton(event) {
+        if (event.target.classList.contains('button-watched')) {
+          addMovieToWatchedLocalStorage(e.target.id)
+        }
+      }
+
+      function onDeleteWatchedButton() {
           let localMovies = JSON.parse(localStorage.getItem("watchedList"));
           console.log(localMovies);
           localMovies = localMovies.filter((movie) => movie.id != e.target.id);
           console.log(localMovies)
           localStorage.setItem("watchedList", JSON.stringify(localMovies));
           localMovies = JSON.parse(localStorage.getItem("watchedList"));
-           console.log(localMovies)
+          console.log(localMovies)
       }
 
       function onDeleteQueueButton() {    
        
         let localMovies = JSON.parse(localStorage.getItem("queueList"));
-        
         localMovies = localMovies.filter((movie) => movie.id != e.target.id);
-        
         localStorage.setItem("queueList", JSON.stringify(localMovies));
-        
         localMovies = JSON.parse(localStorage.getItem("queueList"));
-        
-
       }
-
-
-      
 
       modalOpen(e.target.id);   
       
@@ -203,8 +216,8 @@ function onBody(e) {
   }
   
 }  
-      
-localStorage.removeItem("watchedList")
-localStorage.removeItem("queueList")
+
+// localStorage.removeItem("watchedList")
+// localStorage.removeItem("queueList")
 
 
