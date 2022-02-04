@@ -28,5 +28,5 @@ export function genreIdToName(arrayIdGenres, movieGenres) {
       }
     }
   })
-  return genreArr.join(' ');
+  return genreArr.join(', ');
 }
