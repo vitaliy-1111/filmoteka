@@ -6,6 +6,8 @@
   border: 1px solid #ffffff;
   border-radius: 5px;
   text-transform: uppercase;
+  cursor: pointer;
+  @include transition-base(background-color);
 
   &:hover,
   :focus {
