@@ -15,21 +15,17 @@ import { modalOpen } from './js/modal.js';
 
 let watchedList = [];
 let queueList = [];
-
-const homePagination = new Pagination('#tui-pagination-container', {
-    totalItems: 0,
+const paginationOptions = {
+   totalItems: 0,
     itemPerPage: 20,
     visiblePages: 5,
     page: 1,
-});
+}
+
+const homePagination = new Pagination('#tui-pagination-container', paginationOptions);
 const homepPaginationPage = homePagination.getCurrentPage();
 
-const searchPagination = new Pagination('#tui-pagination-container', {
-    totalItems: 0,
-    itemPerPage: 20,
-    visiblePages: 5,
-    page: 1,
-});
+const searchPagination = new Pagination('#tui-pagination-container', paginationOptions);
 const searchPaginationPage = searchPagination.getCurrentPage();
 
 

@@ -1,0 +1,6 @@
+.tui-pagination .tui-first-child.tui-is-selected,
+.tui-pagination .tui-is-selected {
+  background-color: $color-accent;
+  border: 1px solid $color-accent;
+  border-left: 1px solid $color-accent;
+}
