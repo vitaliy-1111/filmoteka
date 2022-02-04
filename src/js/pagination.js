@@ -1,36 +1,8 @@
-// import Pagination from 'tui-pagination';
-// import 'tui-pagination/dist/tui-pagination.css';
-import {refs} from './refs.js';
-// export function tuiPagination() {
-//   const container = document.getElementById('tui-pagination-container');
-//   const options = {
-//     totalItems: 500,
-//     itemPerPage: 5,
-//     visiblepages: 5,
-//     page: 1,
-//     centerAlign: false,
-//     template: {
-//             page: '<a href="#" class="tui-page-btn">{{page}}p</a>',
-//             currentPage: '<strong class="tui-page-btn tui-is-selected">{{page}}p</strong>',
-//             moveButton:
-//                 '<a href="#" class="tui-page-btn tui-{{type}} custom-class-{{type}}">' +
-//                     '<span class="tui-ico-{{type}}">{{type}}</span>' +
-//                 '</a>',
-//             disabledMoveButton:
-//                 '<span class="tui-page-btn tui-is-disabled tui-{{type}} custom-class-{{type}}">' +
-//                     '<span class="tui-ico-{{type}}">{{type}}</span>' +
-//                 '</span>',
-//             moreButton:
-//                 '<a href="#" class="tui-page-btn tui-{{type}}-is-ellip custom-class-{{type}}">' +
-//                     '<span class="tui-ico-ellip">...</span>' +
-//                 '</a>'
-//         }
-//   }
-//   const instance = new Pagination(container, options);
-//   instance.on('afterMove', function (evenData) {
-//     console.log('curren page:' + evenData.page)
-//   })
-// }
+import Pagination from 'tui-pagination';
+import 'tui-pagination/dist/tui-pagination.css';
+import { refs } from './refs.js';
+// import { fetchMoviesByQuery, fetchMoviesByMedia, fetchMovieById,  fetchMovieDetails } from './js/fetch.js';
+
 export function paginationMovies() {
   const pagination = new Pagination('#tui-pagination-container', {
     totalItems: 0,
@@ -38,14 +10,15 @@ export function paginationMovies() {
     visiblePages: 5,
     page: 1,
   });
+
   const page = pagination.getCurrentPage();
 
   fetchImages(page).then((data) => {
-    console.log(data)
     pagination.reset(data.total_pages);
     renderImages(data);
-    console.log(data)
+  
   });
+
   pagination.on('afterMove', (e) => {
     const currentPage = e.page;
     fetchImages(currentPage).then((data) => renderImages(data))
@@ -126,3 +99,34 @@ export function paginationSearchMovies(value) {
     // console.log(images.page);
   }
 }
+
+// export function tuiPagination() {
+//   const container = document.getElementById('tui-pagination-container');
+//   const options = {
+//     totalItems: 500,
+//     itemPerPage: 5,
+//     visiblepages: 5,
+//     page: 1,
+//     centerAlign: false,
+//     template: {
+//             page: '<a href="#" class="tui-page-btn">{{page}}p</a>',
+//             currentPage: '<strong class="tui-page-btn tui-is-selected">{{page}}p</strong>',
+//             moveButton:
+//                 '<a href="#" class="tui-page-btn tui-{{type}} custom-class-{{type}}">' +
+//                     '<span class="tui-ico-{{type}}">{{type}}</span>' +
+//                 '</a>',
+//             disabledMoveButton:
+//                 '<span class="tui-page-btn tui-is-disabled tui-{{type}} custom-class-{{type}}">' +
+//                     '<span class="tui-ico-{{type}}">{{type}}</span>' +
+//                 '</span>',
+//             moreButton:
+//                 '<a href="#" class="tui-page-btn tui-{{type}}-is-ellip custom-class-{{type}}">' +
+//                     '<span class="tui-ico-ellip">...</span>' +
+//                 '</a>'
+//         }
+//   }
+//   const instance = new Pagination(container, options);
+//   instance.on('afterMove', function (evenData) {
+//     console.log('curren page:' + evenData.page)
+//   })
+// }

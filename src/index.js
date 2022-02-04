@@ -1,10 +1,10 @@
 
 import './sass/main.scss';
-import 'basiclightbox/dist/basicLightbox.min.css';
-import { movieGenre} from './js/genres.js';
+import { movieGenre } from './js/genres.js';
 
-// import * as basicLightbox from 'basiclightbox';
-import { paginationMovies, paginationSearchMovies } from './js/pagination.js';
+import Pagination from 'tui-pagination';
+import 'tui-pagination/dist/tui-pagination.css';
+// import { paginationMovies, paginationSearchMovies } from './js/pagination.js';
 import { fetchMoviesByQuery, fetchMoviesByMedia, fetchMovieById,  fetchMovieDetails } from './js/fetch.js';
 import debounce from 'lodash.debounce';
 // import './js/filmoteka.js';
@@ -13,12 +13,26 @@ import { refs } from './js/refs.js';
 import { renderHomeGallery, renderLibraryGallery, renderEmptyGallery, renderModalMovie } from './js/render.js';
 import { modalOpen } from './js/modal.js';
 
-
 let watchedList = [];
 let queueList = [];
 
-// modalOpen();
-// const instance = basicLightbox.create(modalMovie);
+const homePagination = new Pagination('#tui-pagination-container', {
+    totalItems: 0,
+    itemPerPage: 20,
+    visiblePages: 5,
+    page: 1,
+});
+const homepPaginationPage = homePagination.getCurrentPage();
+
+const searchPagination = new Pagination('#tui-pagination-container', {
+    totalItems: 0,
+    itemPerPage: 20,
+    visiblePages: 5,
+    page: 1,
+});
+const searchPaginationPage = searchPagination.getCurrentPage();
+
+
 
 refs.libraryPageLinkEl.addEventListener("click", onLibraryPageLinkEl);
 refs.homePageLinkEl.addEventListener("click", onHomePageLinkEl);
@@ -26,24 +40,33 @@ refs.logoPageLinkEl.addEventListener("click", onHomePageLinkEl);
 refs.logoIconPageLinkEl.addEventListener("click", onHomePageLinkEl);
 refs.searhFormEl.addEventListener('input', debounce((onSearhFormInput), 1000));
 
-fetchMovie("movie");
+fetchMovie("movie", homepPaginationPage);
 
-function fetchMovie(mediaValue) {
-  fetchMoviesByMedia(mediaValue).then(resp => {
+function fetchMovie(mediaValue, homepPaginationPage) {
+  fetchMoviesByMedia(mediaValue, homepPaginationPage).then(resp => {
     console.log(resp);
+    homePagination.reset(resp.total_pages);
     const listMovies = resp.results;
+    console.log(resp.results);
     renderHomeGallery(listMovies);
-    // paginationMovies();
-  })
+  });
+  homePagination.on('afterMove', (event) => {
+    const currentPage = event.page;
+    fetchMoviesByMedia(mediaValue, currentPage).then((response) => renderHomeGallery(response.results))
+  });
 }
 
-function onSearhFormInput(e) {
-  console.log(e.target.value);
-  const searchQueryValue = e.target.value;
-  // paginationSearchMovies(e.target.value)
-  fetchMoviesByQuery(searchQueryValue).then(resp => {
+function onSearhFormInput(event) {
+  const searchQueryValue = event.target.value;
+  // paginationSearchMovies(event.target.value)
+  fetchMoviesByQuery(searchQueryValue, searchPaginationPage).then(resp => {
+     searchPagination.reset(resp.total_pages);
     const listMovies = resp.results;
     renderHomeGallery(listMovies);
+  });
+ searchPagination.on('afterMove', (event) => {
+   const currentPage = event.page;
+   fetchMoviesByQuery(searchQueryValue, currentPage).then((response) => { console.log('search result', response); renderHomeGallery(response.results) })
   });
 }
 
@@ -54,7 +77,7 @@ function onHomePageLinkEl(e) {
   refs.homePageLinkEl.classList.add("home-link--current");
   refs.searhFormEl.innerHTML = homePage;
 
-  fetchMovie("movie");
+  fetchMovie("movie", homepPaginationPage);
 }
 
 function onLibraryPageLinkEl(e) {

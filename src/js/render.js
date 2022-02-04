@@ -5,6 +5,9 @@ import { movieGenre, genreIdToName } from './genres.js';
 export function renderHomeGallery(listMovies) {
   const gallery = listMovies.map(movie => {
     const genreName = genreIdToName(movie.genre_ids, movieGenre);
+    if (movie.release_date === '') {
+      return movie.release_date = 'no date';
+    }
     return `<li class="cinema-gallery__item">
         <div class="thumb-img">
           <img class="cinema-gallery__img img" src="https://image.tmdb.org/t/p/w500${movie.poster_path}"
@@ -13,7 +16,7 @@ export function renderHomeGallery(listMovies) {
         </div>
         <div class="thumb-text">
           <p class="cinema-gallery__name">${movie.name || movie.title}</p>
-          <p class="cinema-gallery__text">${genreName} | ${movie.release_date.slice(0, 4) || movie.first_air_date.slice(0, 4) || ' '}</p>
+          <p class="cinema-gallery__text">${genreName} | ${movie.release_date || movie.first_air_date || ' '}</p>
         </div>`});    
   refs.galleryListEl.innerHTML = gallery.join(''); 
 }
