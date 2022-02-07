@@ -5,6 +5,7 @@ import { movieGenre } from './js/genres.js';
 
 import Pagination from 'tui-pagination';
 import debounce from 'lodash.debounce';
+import './js/scroll.js';
 
 import { refs } from './js/refs.js';
 import { homePage, libraryPage, modalMovie } from './js/template.js';
@@ -36,6 +37,7 @@ refs.logoIconPageLinkEl.addEventListener("click", onHomePageLinkEl);
 refs.searhFormEl.addEventListener('input', debounce((onSearhFormInput), 1000));
 
 fetchMovie("movie", homepPaginationPage);
+//  onScrollButton();
 
 function fetchMovie(mediaValue, homepPaginationPage) {
   fetchMoviesByMedia(mediaValue, homepPaginationPage).then(resp => {
@@ -221,3 +223,9 @@ function onBody(e) {
 // localStorage.removeItem("queueList")
 
 
+// window.addEventListener('scroll', onWindow);
+// function onWindow(e) {
+//   // console.log(e.path[1].scrollY)
+//   console.log(window.scrollY);
+// }
+// console.log(window.scrollY);

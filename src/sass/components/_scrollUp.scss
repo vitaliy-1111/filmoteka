@@ -1,0 +1,17 @@
+.scroll-top {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  z-index: 2;
+  transform: rotate(90deg);
+  @include transition-base(transform);
+  background-color: transparent;
+  border: none;
+  &:hover,
+  :focus {
+    transform: scale(1.2) rotate(90deg);
+  }
+}
+.icon-arrow {
+  fill: $color-accent;
+}
