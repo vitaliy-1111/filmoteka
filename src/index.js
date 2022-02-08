@@ -35,6 +35,8 @@ refs.homePageLinkEl.addEventListener("click", onHomePageLinkEl);
 refs.logoPageLinkEl.addEventListener("click", onHomePageLinkEl);
 refs.logoIconPageLinkEl.addEventListener("click", onHomePageLinkEl);
 refs.searhFormEl.addEventListener('input', debounce((onSearhFormInput), 1000));
+document.querySelector('.cinema-gallery__list').addEventListener('mouseover', mouseEnterOnBackdrop);
+    document.querySelector('.cinema-gallery__list').addEventListener('mouseout', mouseOutOnBackdrop);
 
 fetchMovie("movie", homepPaginationPage);
 //  onScrollButton();
@@ -46,8 +48,6 @@ function fetchMovie(mediaValue, homepPaginationPage) {
     const listMovies = resp.results;
     console.log(resp.results);
     renderHomeGallery(listMovies);
-    document.querySelector('.cinema-gallery__list').addEventListener('mouseover', mouseEnterOnBackdrop);
-    document.querySelector('.cinema-gallery__list').addEventListener('mouseout', mouseOutOnBackdrop);
   });
   homePagination.on('afterMove', (event) => {
     const currentPage = event.page;
@@ -58,11 +58,12 @@ function mouseOutOnBackdrop(e) {
     e = e ? e : window.event;
     const from = e.relatedTarget || e.toElement;
     if ((!from || from.nodeName == "HTML")) {
-        // alert("left window");
-      // if (e.target.classList.contains('backdrop-card')) {
-      //    e.target.style.opacity = 0;
-      // }
-      console.log(e);
+      if (e.target.classList.contains('backdrop-card')) {
+         e.target.style.opacity = 0;
+      }
+      if (e.target.classList.contains('button')) {
+       e.target.parentNode.parentNode.style.opacity = 0;
+      }
     }
   if (e.target.classList.contains("backdrop-card") && !e.relatedTarget.classList.contains('button') &&  !e.relatedTarget.classList.contains('backdrop-average')) {
     e.target.style.opacity = 0
@@ -72,11 +73,8 @@ function mouseEnterOnBackdrop(e) {
   console.log('mouseover')
   console.log('e.terget',e.target)
   console.log('relatdtarget',e.relatedTarget)
-  if (e.target.classList.contains("backdrop-card")) {
-    console.log(e.target.style.opacity = 1)
-    console.log('yes it backdrop')
-    console.log(e.target.id);
-    console.log(e.target.childNodes[3].childNodes[1].childNodes[0].textContent)
+  if (e.target.classList.contains("home-gallery__backdrop-card")) {
+    e.target.style.opacity = 1;
      let localWatchedList = JSON.parse(localStorage.getItem("watchedList"));
       localWatchedList === null ? localWatchedList : watchedList = [...localWatchedList];    
     if ((watchedList.find(item => item.id == e.target.id) && true) || false) {
@@ -86,9 +84,26 @@ function mouseEnterOnBackdrop(e) {
      const localQueueList = JSON.parse(localStorage.getItem("queueList"));
       localQueueList === null ? localQueueList : queueList = [...localQueueList];
       if ((queueList.find(item => item.id == e.target.id) && true) || false) {
-       e.target.childNodes[3].childNodes[3].childNodes[0].textContent = "added on your queue list";
+       e.target.childNodes[3].childNodes[3].childNodes[0].textContent = "added to your queue list";
       } 
   }
+   if (e.target.classList.contains("library-gallery__backdrop-card")) {
+     e.target.style.opacity = 1;
+     
+    //    let localMovies = JSON.parse(localStorage.getItem("watchedList"));
+    //       console.log(localMovies);
+    //       localMovies = localMovies.filter((movie) => movie.id != e.target.id);
+    //       console.log(localMovies)
+    //       localStorage.setItem("watchedList", JSON.stringify(localMovies));
+    //       localMovies = JSON.parse(localStorage.getItem("watchedList"));
+
+    //  const localQueueList = JSON.parse(localStorage.getItem("queueList"));
+    //   localQueueList === null ? localQueueList : queueList = [...localQueueList];
+    //   if ((queueList.find(item => item.id == e.target.id) && true) || false) {
+    //    e.target.childNodes[3].childNodes[3].childNodes[0].textContent = "added to your queue list";
+      // } 
+  }
+
 }
 function onSearhFormInput(event) {
   const searchQueryValue = event.target.value;
@@ -133,6 +148,7 @@ function onLibraryPageLinkEl(e) {
     renderEmptyGallery();
   } else {
     renderLibraryGallery(localMovies);
+
     console.log(localMovies)
   }
   document.querySelector(".library-button--watched").addEventListener('click', onLibBtnWatched)
@@ -187,6 +203,34 @@ function addMovieToWatchedLocalStorage(id) {
   }
 }
 
+      function onDeleteWatchedButton(id) {
+          let localMovies = JSON.parse(localStorage.getItem("watchedList"));
+          console.log(localMovies);
+          localMovies = localMovies.filter((movie) => movie.id != id);
+          console.log(localMovies)
+          localStorage.setItem("watchedList", JSON.stringify(localMovies));
+          localMovies = JSON.parse(localStorage.getItem("watchedList"));
+        console.log(localMovies)
+        if (localMovies === null) {
+      renderEmptyGallery();
+    } else {
+      renderLibraryGallery(localMovies, 'watched');
+  }
+      }
+
+      function onDeleteQueueButton(id) {    
+       
+        let localMovies = JSON.parse(localStorage.getItem("queueList"));
+        localMovies = localMovies.filter((movie) => movie.id != id);
+        localStorage.setItem("queueList", JSON.stringify(localMovies));
+        localMovies = JSON.parse(localStorage.getItem("queueList"));
+if (localMovies === null) {
+      renderEmptyGallery();
+    } else {
+      renderLibraryGallery(localMovies, 'queue');
+    }
+}
+      
 
 document.querySelector("body").addEventListener("click", onBody);
 
@@ -197,6 +241,12 @@ function onBody(e) {
   }
   if (e.target.classList.contains("button-watched--backdrop")) {
     addMovieToWatchedLocalStorage(e.target.id);
+  }
+   if (e.target.classList.contains("button-delete-watched--backdrop")) {
+    onDeleteWatchedButton(e.target.id);
+  }
+  if (e.target.classList.contains("button-delete-queue--backdrop")) {
+    onDeleteQueueButton(e.target.id);
   }
 
   if (e.target.classList.contains("button-more")) {
@@ -235,23 +285,23 @@ function onBody(e) {
         }
       }
 
-      function onDeleteWatchedButton() {
-          let localMovies = JSON.parse(localStorage.getItem("watchedList"));
-          console.log(localMovies);
-          localMovies = localMovies.filter((movie) => movie.id != e.target.id);
-          console.log(localMovies)
-          localStorage.setItem("watchedList", JSON.stringify(localMovies));
-          localMovies = JSON.parse(localStorage.getItem("watchedList"));
-          console.log(localMovies)
-      }
+      // function onDeleteWatchedButton() {
+      //     let localMovies = JSON.parse(localStorage.getItem("watchedList"));
+      //     console.log(localMovies);
+      //     localMovies = localMovies.filter((movie) => movie.id != e.target.id);
+      //     console.log(localMovies)
+      //     localStorage.setItem("watchedList", JSON.stringify(localMovies));
+      //     localMovies = JSON.parse(localStorage.getItem("watchedList"));
+      //     console.log(localMovies)
+      // }
 
-      function onDeleteQueueButton() {    
+      // function onDeleteQueueButton() {    
        
-        let localMovies = JSON.parse(localStorage.getItem("queueList"));
-        localMovies = localMovies.filter((movie) => movie.id != e.target.id);
-        localStorage.setItem("queueList", JSON.stringify(localMovies));
-        localMovies = JSON.parse(localStorage.getItem("queueList"));
-      }
+      //   let localMovies = JSON.parse(localStorage.getItem("queueList"));
+      //   localMovies = localMovies.filter((movie) => movie.id != e.target.id);
+      //   localStorage.setItem("queueList", JSON.stringify(localMovies));
+      //   localMovies = JSON.parse(localStorage.getItem("queueList"));
+      // }
 
       modalOpen(e.target.id);   
       

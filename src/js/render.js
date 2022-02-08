@@ -10,11 +10,11 @@ export function renderHomeGallery(listMovies) {
       movie.release_date = 'date';
     }
     if (movie.poster_path==null) {
-      imgUrl = '/cinema-poster.caf95f4c.jpg';
+      imgUrl = '/cinema-poster.2d421eb7.jpg';
     }
     return `<li class="cinema-gallery__item">
         <div class="thumb-img">
-         <div class="backdrop-card" id="${movie.id}">
+         <div class="backdrop-card home-gallery__backdrop-card" id="${movie.id}">
           <span class="cinema-gallery__average backdrop-average ">${movie.vote_average || "10"}</span>
           <div class="button-wrap--backdrop">
             <button class="button-backdrop button button-watched button-watched--backdrop" id="${movie.id}">add to Watched</button>
@@ -39,14 +39,22 @@ export function renderLibraryGallery(listMovies) {
   const gallery = listMovies.map(movie => {
     return `<li class="cinema-gallery__item">
         <div class="thumb-img">
+        <div class="backdrop-card library-gallery__backdrop-card" id="${movie.id}">
+          <span class="cinema-gallery__average backdrop-average ">${movie.vote_average || "10"}</span>
+           <div class="button-wrap--backdrop">
+            <button class="button-backdrop  button button-watched button-delete-watched--backdrop" id="${movie.id}">delete from watched</button>
+            <button class="button-backdrop  button button-queue button-delete-queue--backdrop" id="${movie.id}">delete from queue</button>
+            <button class="button-backdrop  button button-more" id="${movie.id}">see more</button>
+          </div>
+          </div>
           <img class="cinema-gallery__img img" src="https://image.tmdb.org/t/p/w500${movie.poster_path}"
            id="${movie.id}" alt="poster ${movie.name || movie.title}" loading="lazy data-modal-open">
+        
         </div>
         <div class="thumb-text">
           <p class="cinema-gallery__name">${movie.name || movie.title}</p>
           <p class="cinema-gallery__text">${movie.genres.map(genre => genre.name).join(' ')} |
            ${movie.release_date.slice(0, 4) || movie.first_air_date.slice(0, 4) || ' '}
-           <span class="cinema-gallery__average">${movie.vote_average || "10"}</span>
           </p>
         </div></li>`});    
   refs.galleryListEl.innerHTML = gallery.join(''); 
