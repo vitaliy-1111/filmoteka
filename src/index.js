@@ -46,13 +46,50 @@ function fetchMovie(mediaValue, homepPaginationPage) {
     const listMovies = resp.results;
     console.log(resp.results);
     renderHomeGallery(listMovies);
+    document.querySelector('.cinema-gallery__list').addEventListener('mouseover', mouseEnterOnBackdrop);
+    document.querySelector('.cinema-gallery__list').addEventListener('mouseout', mouseOutOnBackdrop);
   });
   homePagination.on('afterMove', (event) => {
     const currentPage = event.page;
     fetchMoviesByMedia(mediaValue, currentPage).then((response) => renderHomeGallery(response.results))
   });
 }
-
+function mouseOutOnBackdrop(e) {
+    e = e ? e : window.event;
+    const from = e.relatedTarget || e.toElement;
+    if ((!from || from.nodeName == "HTML")) {
+        // alert("left window");
+      // if (e.target.classList.contains('backdrop-card')) {
+      //    e.target.style.opacity = 0;
+      // }
+      console.log(e);
+    }
+  if (e.target.classList.contains("backdrop-card") && !e.relatedTarget.classList.contains('button') &&  !e.relatedTarget.classList.contains('backdrop-average')) {
+    e.target.style.opacity = 0
+  }
+}
+function mouseEnterOnBackdrop(e) {
+  console.log('mouseover')
+  console.log('e.terget',e.target)
+  console.log('relatdtarget',e.relatedTarget)
+  if (e.target.classList.contains("backdrop-card")) {
+    console.log(e.target.style.opacity = 1)
+    console.log('yes it backdrop')
+    console.log(e.target.id);
+    console.log(e.target.childNodes[3].childNodes[1].childNodes[0].textContent)
+     let localWatchedList = JSON.parse(localStorage.getItem("watchedList"));
+      localWatchedList === null ? localWatchedList : watchedList = [...localWatchedList];    
+    if ((watchedList.find(item => item.id == e.target.id) && true) || false) {
+         console.log('yes')
+         e.target.childNodes[3].childNodes[1].childNodes[0].textContent = "added to your watched list";
+    } 
+     const localQueueList = JSON.parse(localStorage.getItem("queueList"));
+      localQueueList === null ? localQueueList : queueList = [...localQueueList];
+      if ((queueList.find(item => item.id == e.target.id) && true) || false) {
+       e.target.childNodes[3].childNodes[3].childNodes[0].textContent = "added on your queue list";
+      } 
+  }
+}
 function onSearhFormInput(event) {
   const searchQueryValue = event.target.value;
   // paginationSearchMovies(event.target.value)
@@ -155,9 +192,16 @@ document.querySelector("body").addEventListener("click", onBody);
 
 function onBody(e) {
   e.preventDefault();
-  if (e.target.classList.contains("cinema-gallery__img")) {
-    console.log(e.target.id)
-    
+  if (e.target.classList.contains("button-queue--backdrop")) {
+    addMovieToQueueLocalStorage(e.target.id);
+  }
+  if (e.target.classList.contains("button-watched--backdrop")) {
+    addMovieToWatchedLocalStorage(e.target.id);
+  }
+
+  if (e.target.classList.contains("button-more")) {
+    console.log(e.target)
+
     fetchMovieDetails(e.target.id).then(resp => {
 
       renderModalMovie(resp); 
@@ -166,11 +210,7 @@ function onBody(e) {
       document.querySelector('body').style.overflow = "hidden";
       document.querySelector('.button-queue').addEventListener('click', onQueueButton)
       document.querySelector('.button-watched').addEventListener('click', onWatchedButton)
-      document.querySelector('.button-queue-delete').addEventListener('click', onDeleteQueueButton)
-      document.querySelector('.button-watched-delete').addEventListener('click', onDeleteWatchedButton)
-      
-
-      
+       
       const localWatchedList = JSON.parse(localStorage.getItem("watchedList"));
       localWatchedList === null ? localWatchedList : watchedList = [...localWatchedList];    
        if ((watchedList.find(item => item.id == e.target.id) && true) || false) {

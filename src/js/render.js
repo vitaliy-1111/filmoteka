@@ -14,12 +14,12 @@ export function renderHomeGallery(listMovies) {
     }
     return `<li class="cinema-gallery__item">
         <div class="thumb-img">
-         <div class="backdrop-card">
+         <div class="backdrop-card" id="${movie.id}">
           <span class="cinema-gallery__average backdrop-average ">${movie.vote_average || "10"}</span>
           <div class="button-wrap--backdrop">
-            <button class="button-backdrop button button-watched button-watched--backdrop id="${movie.id}">Watched</button>
-            <button class="button-backdrop  button button-queue  id="${movie.id}">Queue</button>
-            <button class="button-backdrop  button button-more  id="${movie.id}">see more</button>
+            <button class="button-backdrop button button-watched button-watched--backdrop" id="${movie.id}">add to Watched</button>
+            <button class="button-backdrop  button button-queue button-queue--backdrop" id="${movie.id}">add to Queue</button>
+            <button class="button-backdrop  button button-more" id="${movie.id}">see more</button>
           </div>
           </div>
           <img class="cinema-gallery__img img" src='${imgUrl}${movie.poster_path || ''}'
@@ -76,10 +76,11 @@ export function renderModalMovie(movie) {
             <button class="modal-movie__button button button-watched  id="${movie.id}">Watched</button>
             <button class="modal-movie__button button button-queue  id="${movie.id}">Queue</button>
           </div> 
-          <div class="modal-movie__button-wrap">
-            <button class="modal-movie__button button button-watched-delete  id="${movie.id}">watched-delete</button>
-            <button class="modal-movie__button button button-queue-delete id="${movie.id}">queue-delete</button>
-          </div>
+        
         </div>`;
   refs.modalMovie.innerHTML = movieInfo;
 }
+  // <div class="modal-movie__button-wrap">
+  //           <button class="modal-movie__button button button-watched-delete  id="${movie.id}">watched-delete</button>
+  //           <button class="modal-movie__button button button-queue-delete id="${movie.id}">queue-delete</button>
+  //         </div>
