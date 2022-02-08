@@ -1,16 +1,16 @@
 import throttle from 'lodash.throttle';
+import { refs } from './refs'
+refs.scrollButtonEl.addEventListener('click', onScrollButton)
 
-const scrollButton = document.querySelector('.scroll-top');
-scrollButton.addEventListener('click', onScrollButton)
 console.log(window.scrollY);
 document.addEventListener('scroll', throttle((addScrollButton), 250))
 function addScrollButton() {
   console.log(window.scrollY)
  if (window.scrollY < 300) {
-    scrollButton.classList.add('visually-hidden');
+    refs.scrollButtonEl.classList.add('visually-hidden');
   }
   if (window.scrollY > 300) {
-    scrollButton.classList.remove('visually-hidden');
+    refs.scrollButtonEl.classList.remove('visually-hidden');
 }
 }
 export function onScrollButton() {

@@ -10,6 +10,7 @@ export const refs = {
   galleryListEl: document.querySelector(".cinema-gallery__list"),
   
   modalMovie: document.querySelector(".modal-movie"),
+  scrollButtonEl: document.querySelector('.scroll-top'),
   
 
   paginationContainerEl: document.querySelector("#tui-pagination-container"),
