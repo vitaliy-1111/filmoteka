@@ -12,10 +12,13 @@ export function renderHomeGallery(listMovies) {
     if (movie.poster_path==null) {
       imgUrl = 'https://cdn.pixabay.com/photo/2020/02/17/21/12/cinema-4857895_1280.jpg';
     }
+    if (!movie.release_date && !movie.first_air_date) {
+      movie.release_date = ' ';
+    }
     return `<li class="cinema-gallery__item">
         <div class="thumb-img">
          <div class="backdrop-card home-gallery__backdrop-card" id="${movie.id}">
-          <span class="cinema-gallery__average backdrop-average ">${movie.vote_average || " "}</span>
+          <span class="cinema-gallery__average backdrop-average ${movie.vote_average == 0 ? movie.vote_average = 'visually-hidden' : movie.vote_average}">${movie.vote_average || " "}</span>
           <div class="button-wrap--backdrop">
             <button class="button-backdrop button button-watched button-watched--backdrop" id="${movie.id}">add to Watched</button>
             <button class="button-backdrop  button button-queue button-queue--backdrop" id="${movie.id}">add to Queue</button>
@@ -29,7 +32,7 @@ export function renderHomeGallery(listMovies) {
         <div class="thumb-text">
           <p class="cinema-gallery__name">${movie.name || movie.title}</p>
           <p class="cinema-gallery__text">${genreName || 'no genres'} |
-           ${movie.release_date.slice(0, 4) || movie.first_air_date.slice(0, 4) || ' '}
+           ${movie.release_date.slice(0,4) || movie.first_air_date.slice(0,4) || ' '}
           </p>
         </div></li>`});    
   refs.galleryListEl.innerHTML = gallery.join(''); 
@@ -64,7 +67,7 @@ export function renderLibraryGallaryWathed(listMovies) {
     return `<li class="cinema-gallery__item">
         <div class="thumb-img">
         <div class="backdrop-card library-gallery__backdrop-card" id="${movie.id}">
-          <span class="cinema-gallery__average backdrop-average ">${movie.vote_average || " "}</span>
+          <span class="cinema-gallery__average backdrop-average ${movie.vote_average == 0 ? movie.vote_average = 'visually-hidden' : movie.vote_average}">${movie.vote_average}</span>
            <div class="button-wrap--backdrop">
             <button class="button-backdrop  button button-watched button-delete-watched--backdrop" id="${movie.id}">delete from watched</button>
             <button class="button-backdrop  button button-queue button-queue--backdrop" id="${movie.id}">add to Queue</button>
@@ -88,7 +91,7 @@ export function renderLibraryGallaryQueue(listMovies) {
     return `<li class="cinema-gallery__item">
         <div class="thumb-img">
         <div class="backdrop-card library-gallery__backdrop-card" id="${movie.id}">
-          <span class="cinema-gallery__average backdrop-average ">${movie.vote_average || "10"}</span>
+          <span class="cinema-gallery__average backdrop-average ${movie.vote_average == 0 ? movie.vote_average = 'visually-hidden' : movie.vote_average}">${movie.vote_average}</span>
            <div class="button-wrap--backdrop">
            <button class="button-backdrop  button button-queue button-delete-queue--backdrop" id="${movie.id}">delete from queue</button>
            <button class="button-backdrop button button-watched button-watched--backdrop" id="${movie.id}">add to Watched</button>

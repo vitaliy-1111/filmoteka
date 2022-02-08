@@ -250,7 +250,7 @@ function onBody(e) {
   }
 
   if (e.target.classList.contains("button-more")) {
-    console.log(e.target)
+   
 
     fetchMovieDetails(e.target.id).then(resp => {
 
@@ -258,6 +258,7 @@ function onBody(e) {
       refs.modal.classList.toggle('is-hidden');
       refs.modal.classList.toggle('backdrop--is-hidden');
       document.querySelector('body').style.overflow = "hidden";
+      
       document.querySelector('.button-queue').addEventListener('click', onQueueButton)
       document.querySelector('.button-watched').addEventListener('click', onWatchedButton)
        

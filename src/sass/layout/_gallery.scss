@@ -41,18 +41,18 @@
   @media screen and (min-width: 1024px) {
     width: 264px;
   }
-}
-// &:hover,
-// :focus {
-//   transform: scale(1.02);
-//   .backdrop-card {
-//     opacity: 0;
-//   }
-//   .button-wrap--backdrop {
-//     opacity: 0;
-//   }
-// }
 
+  &:hover,
+  :focus {
+    transform: scale(1.02);
+    // .backdrop-card {
+    //   opacity: 0;
+    // }
+    // .button-wrap--backdrop {
+    //   opacity: 0;
+    // }
+  }
+}
 .cinema-gallery__img {
   // margin-bottom: 10px;
   cursor: pointer;
