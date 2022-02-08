@@ -10,7 +10,7 @@ import './js/scroll.js';
 import { refs } from './js/refs.js';
 import { homePage, libraryPage, modalMovie } from './js/template.js';
 import { fetchMoviesByQuery, fetchMoviesByMedia, fetchMovieById,  fetchMovieDetails } from './js/fetch.js';
-import { renderHomeGallery, renderLibraryGallery, renderEmptyGallery, renderModalMovie } from './js/render.js';
+import { renderHomeGallery, renderLibraryGallaryWathed, renderLibraryGallaryQueue, renderEmptyGallery, renderModalMovie } from './js/render.js';
 import { modalOpen } from './js/modal.js';
 
 let watchedList = [];
@@ -57,15 +57,14 @@ function fetchMovie(mediaValue, homepPaginationPage) {
 function mouseOutOnBackdrop(e) {
     e = e ? e : window.event;
     const from = e.relatedTarget || e.toElement;
-    if ((!from || from.nodeName == "HTML")) {
+   if ((!from || from.nodeName == "HTML")) {
       if (e.target.classList.contains('backdrop-card')) {
          e.target.style.opacity = 0;
       }
       if (e.target.classList.contains('button')) {
        e.target.parentNode.parentNode.style.opacity = 0;
       }
-    }
-  if (e.target.classList.contains("backdrop-card") && !e.relatedTarget.classList.contains('button') &&  !e.relatedTarget.classList.contains('backdrop-average')) {
+    }else if(e.target.classList.contains("backdrop-card") && !e.relatedTarget.classList.contains('button') &&  !e.relatedTarget.classList.contains('backdrop-average')) {
     e.target.style.opacity = 0
   }
 }
@@ -89,6 +88,7 @@ function mouseEnterOnBackdrop(e) {
   }
    if (e.target.classList.contains("library-gallery__backdrop-card")) {
      e.target.style.opacity = 1;
+     
      
     //    let localMovies = JSON.parse(localStorage.getItem("watchedList"));
     //       console.log(localMovies);
@@ -147,7 +147,7 @@ function onLibraryPageLinkEl(e) {
   if (localMovies === null) {
     renderEmptyGallery();
   } else {
-    renderLibraryGallery(localMovies);
+    renderLibraryGallaryWathed(localMovies);
 
     console.log(localMovies)
   }
@@ -163,7 +163,7 @@ function onLibBtnWatched() {
   if (localMovies === null) {
       renderEmptyGallery();
     } else {
-      renderLibraryGallery(localMovies, 'watched');
+      renderLibraryGallaryWathed(localMovies, 'watched');
   }
 }
 
@@ -175,7 +175,7 @@ function onLibBtnQueue() {
     if (localMovies === null) {
       renderEmptyGallery();
     } else {
-      renderLibraryGallery(localMovies, 'queue');
+      renderLibraryGallaryQueue(localMovies, 'queue');
     }
 }
 
@@ -214,7 +214,7 @@ function addMovieToWatchedLocalStorage(id) {
         if (localMovies === null) {
       renderEmptyGallery();
     } else {
-      renderLibraryGallery(localMovies, 'watched');
+      renderLibraryGallaryWathed(localMovies, 'watched');
   }
       }
 
@@ -227,7 +227,7 @@ function addMovieToWatchedLocalStorage(id) {
 if (localMovies === null) {
       renderEmptyGallery();
     } else {
-      renderLibraryGallery(localMovies, 'queue');
+      renderLibraryGallaryQueue(localMovies, 'queue');
     }
 }
       
