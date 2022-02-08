@@ -45,26 +45,25 @@
   :focus {
     transform: scale(1.02);
     .backdrop-card {
-      opacity: 0.5;
+      opacity: 1;
+    }
+    .button-wrap--backdrop {
+      opacity: 1;
     }
   }
 }
-.button-wrap {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
+
 .cinema-gallery__img {
   margin-bottom: 10px;
   cursor: pointer;
   height: 100%;
   width: 100%;
   object-fit: cover;
-  background-image: linear-gradient(to right, rgba(00, 00, 00, 0.56), rgba(00, 00, 00, 0.56)),
-    url('../images/cinema-poster.jpg');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
+  // background-image: linear-gradient(to right, rgba(00, 00, 00, 0.56), rgba(00, 00, 00, 0.56)),
+  //   url('../images/cinema-poster.jpg');
+  // background-repeat: no-repeat;
+  // background-position: center;
+  // background-size: cover;
 }
 .cinema-gallery__name {
   font-weight: $font-weight-normal;

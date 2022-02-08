@@ -5,19 +5,30 @@ import { movieGenre, genreIdToName } from './genres.js';
 export function renderHomeGallery(listMovies) {
   const gallery = listMovies.map(movie => {
     const genreName = genreIdToName(movie.genre_ids, movieGenre);
+    let imgUrl = "https://image.tmdb.org/t/p/w500";
     if (movie.release_date === '') {
       movie.release_date = 'date';
+    }
+    if (movie.poster_path==null) {
+      imgUrl = '/cinema-poster.caf95f4c.jpg';
     }
     return `<li class="cinema-gallery__item">
         <div class="thumb-img">
          <div class="backdrop-card">
-          <img class="cinema-gallery__img img" src="https://image.tmdb.org/t/p/w500${movie.poster_path}"
+          <span class="cinema-gallery__average backdrop-average ">${movie.vote_average || "10"}</span>
+          <div class="button-wrap--backdrop">
+            <button class="button-backdrop button button-watched button-watched--backdrop id="${movie.id}">Watched</button>
+            <button class="button-backdrop  button button-queue  id="${movie.id}">Queue</button>
+            <button class="button-backdrop  button button-more  id="${movie.id}">see more</button>
+          </div>
+          </div>
+          <img class="cinema-gallery__img img" src='${imgUrl}${movie.poster_path || ''}'
            id="${movie.id}" alt="poster ${movie.name || movie.title}" loading="lazy data-modal-open">
-         </div>  
+           
         </div>
         <div class="thumb-text">
           <p class="cinema-gallery__name">${movie.name || movie.title}</p>
-          <p class="cinema-gallery__text">${genreName} |
+          <p class="cinema-gallery__text">${genreName || 'no genres'} |
            ${movie.release_date.slice(0, 4) || movie.first_air_date.slice(0, 4) || ' '}
           </p>
         </div></li>`});    
@@ -50,7 +61,7 @@ export function renderEmptyGallery() {
 export function renderModalMovie(movie) {
   const movieInfo = `<div class="modal-movie__container">
         <div class="modal-movie__img-thumb">
-          <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="poster ${movie.name || movie.title}"" id="${movie.id}">
+          <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="poster ${movie.name || movie.title}" id="${movie.id}">
         </div>
         <div class="modal-movie__text-wrap">
           <h2 class="movie-title">${movie.title}</h2>

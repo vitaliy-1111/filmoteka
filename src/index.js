@@ -18,7 +18,7 @@ let queueList = [];
 const paginationOptions = {
    totalItems: 0,
     itemPerPage: 20,
-    visiblePages: 5,
+    visiblePages: 4,
     page: 1,
 }
 
@@ -157,6 +157,7 @@ function onBody(e) {
   e.preventDefault();
   if (e.target.classList.contains("cinema-gallery__img")) {
     console.log(e.target.id)
+    
     fetchMovieDetails(e.target.id).then(resp => {
 
       renderModalMovie(resp); 
@@ -221,11 +222,3 @@ function onBody(e) {
 
 // localStorage.removeItem("watchedList")
 // localStorage.removeItem("queueList")
-
-
-// window.addEventListener('scroll', onWindow);
-// function onWindow(e) {
-//   // console.log(e.path[1].scrollY)
-//   console.log(window.scrollY);
-// }
-// console.log(window.scrollY);
