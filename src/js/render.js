@@ -69,7 +69,7 @@ export function renderEmptyGallery() {
 export function renderModalMovie(movie) {
   const movieInfo = `<div class="modal-movie__container">
         <div class="modal-movie__img-thumb">
-          <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="poster ${movie.name || movie.title}" id="${movie.id}">
+          <img class="cinema-modal__img" src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="poster ${movie.name || movie.title}" id="${movie.id}">
         </div>
         <div class="modal-movie__text-wrap">
           <h2 class="movie-title">${movie.title}</h2>

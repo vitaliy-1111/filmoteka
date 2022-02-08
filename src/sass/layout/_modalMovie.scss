@@ -23,15 +23,23 @@
   width: 240px;
   height: 356px;
   margin-bottom: 30px;
+
   @media screen and (min-width: 768px) {
     width: 264px;
     height: 373px;
+    margin-bottom: 0;
   }
   @media screen and (min-width: 1024px) {
-    width: 396px;
+    width: 346px;
     height: 477px;
   }
 }
+.cinema-modal__img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
 .movie-title {
   text-transform: uppercase;
   font-size: 20px;
