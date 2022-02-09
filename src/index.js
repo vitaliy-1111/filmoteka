@@ -42,6 +42,8 @@ fetchMovie("movie", homepPaginationPage);
 //  onScrollButton();
 
 function fetchMovie(mediaValue, homepPaginationPage) {
+  document.querySelector('.search-result-text').classList.add('visually-hidden');
+
   fetchMoviesByMedia(mediaValue, homepPaginationPage).then(resp => {
     console.log(resp);
     homePagination.reset(resp.total_pages);
@@ -106,12 +108,29 @@ function mouseEnterOnBackdrop(e) {
 
 }
 function onSearhFormInput(event) {
+  if (event.target.value == '') {
+       
+  return fetchMovie("movie", homepPaginationPage);
+  }
+  
   const searchQueryValue = event.target.value;
+ 
   // paginationSearchMovies(event.target.value)
   fetchMoviesByQuery(searchQueryValue, searchPaginationPage).then(resp => {
-     searchPagination.reset(resp.total_pages);
+    searchPagination.reset(resp.total_pages);
+    console.log(resp.results)
+    if (resp.results.length === 0) {
+      document.querySelector('.search-result-text').classList.remove('visually-hidden');
+      refs.paginationContainerEl.classList.add("visually-hidden");
+    }
+    if ((resp.results.length !== 0)) {
+      refs.paginationContainerEl.classList.remove("visually-hidden");
+       document.querySelector('.search-result-text').classList.add('visually-hidden');
+    }
+    
     const listMovies = resp.results;
     renderHomeGallery(listMovies);
+    
   });
  searchPagination.on('afterMove', (event) => {
    const currentPage = event.page;
@@ -261,6 +280,16 @@ function onBody(e) {
       refs.modal.classList.toggle('is-hidden');
       refs.modal.classList.toggle('backdrop--is-hidden');
       document.querySelector('body').style.overflow = "hidden";
+      document.addEventListener('keydown', keyPress)
+      function keyPress(e) {
+        console.log(e.key)
+        if (e.key === 'Escape') {
+          refs.modal.classList.toggle('is-hidden');
+          refs.modal.classList.toggle('backdrop--is-hidden');
+           document.querySelector('body').style.overflow = "auto";
+          document.removeEventListener('keydown', keyPress)
+       }
+      }
       
       document.querySelector('.modal-button-queue').addEventListener('click', onQueueButton)
       document.querySelector('.modal-button-watched').addEventListener('click', onWatchedButton)
