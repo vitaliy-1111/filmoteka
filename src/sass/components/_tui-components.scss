@@ -7,3 +7,10 @@
 .tui-pagination .tui-is-selected:hover {
   background-color: $color-accent;
 }
+.tui-pagination .tui-page-btn {
+  border-radius: 5px;
+  border: none;
+}
+.tui-pagination {
+  margin-top: 30px;
+}

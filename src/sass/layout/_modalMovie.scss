@@ -46,11 +46,15 @@
   margin-bottom: 20px;
 }
 .info-title {
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 10px;
+  color: #8c8c8c;
 }
 .modal-movie__about {
   margin-top: 20px;
   margin-bottom: 10px;
+  text-transform: uppercase;
 }
 .about-text {
   margin-bottom: 20px;
@@ -65,8 +69,18 @@
 }
 .modal-movie__button {
   min-width: 112px;
-  background-color: grey;
+  background-color: transparent;
   margin-right: 20px;
+  color: black;
+  border: 1px solid black;
+  font-weight: 500;
+  // @include transition-base(color, background-color);
+  &:hover,
+  :focus {
+    background-color: $color-accent;
+    color: white;
+    border: 1px solid $color-accent;
+  }
 }
 .test {
   background-color: white;
@@ -78,4 +92,17 @@
   @media screen and (min-width: 1024px) {
     width: 396px;
   }
+}
+.info-averages {
+  display: inline-block;
+  width: 36px;
+  height: 16px;
+  margin-left: auto;
+  background-color: #ff6b01;
+  color: white;
+  border-radius: 5px;
+  text-align: center;
+}
+.info-text {
+  color: black;
 }

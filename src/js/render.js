@@ -124,7 +124,7 @@ export function renderModalMovie(movie) {
         </div>
         <div class="modal-movie__text-wrap">
           <h2 class="movie-title">${movie.title}</h2>
-          <p class="info-title">Vote / Votes<span class="info-text">${movie.vote_average} / ${movie.vote_count}</span></p>
+          <p class="info-title">Vote / Votes<span class = "info-averages">${movie.vote_average}</span> / <span class="info-text"> ${movie.vote_count}</span></p>
           <p class="info-title">Popularity<span class="info-text">${movie.popularity}</span></p>
           <p class="info-title">Original Title<span class="info-text">${movie.original_title}</span></p>
           <p class="info-title">Jenre<span class="info-text">${movie.genres.map(genre => genre.name).join(' ')}</span></p>

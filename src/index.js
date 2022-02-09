@@ -78,12 +78,12 @@ function mouseEnterOnBackdrop(e) {
       localWatchedList === null ? localWatchedList : watchedList = [...localWatchedList];    
     if ((watchedList.find(item => item.id == e.target.id) && true) || false) {
          console.log('yes')
-         e.target.childNodes[3].childNodes[1].childNodes[0].textContent = "added to your watched list";
+         e.target.childNodes[3].childNodes[1].childNodes[0].textContent = "added to watched";
     } 
      const localQueueList = JSON.parse(localStorage.getItem("queueList"));
       localQueueList === null ? localQueueList : queueList = [...localQueueList];
       if ((queueList.find(item => item.id == e.target.id) && true) || false) {
-       e.target.childNodes[3].childNodes[3].childNodes[0].textContent = "added to your queue list";
+       e.target.childNodes[3].childNodes[3].childNodes[0].textContent = "added to queue";
       } 
   }
    if (e.target.classList.contains("library-gallery__backdrop-card")) {
@@ -239,11 +239,11 @@ function onBody(e) {
   e.preventDefault();
   if (e.target.classList.contains("button-queue--backdrop")) {
     addMovieToQueueLocalStorage(e.target.id);
-    e.target.textContent = 'added to your queue list';
+    e.target.textContent = 'added to queue';
   }
   if (e.target.classList.contains("button-watched--backdrop")) {
     addMovieToWatchedLocalStorage(e.target.id);
-    e.target.textContent = 'added to your watched list';
+    e.target.textContent = 'added to watched';
   }
    if (e.target.classList.contains("button-delete-watched--backdrop")) {
     onDeleteWatchedButton(e.target.id);
@@ -268,23 +268,23 @@ function onBody(e) {
       const localWatchedList = JSON.parse(localStorage.getItem("watchedList"));
       localWatchedList === null ? localWatchedList : watchedList = [...localWatchedList];    
        if ((watchedList.find(item => item.id == e.target.id) && true) || false) {
-         document.querySelector('.modal-button-watched').textContent = 'added to your queue list';
+         document.querySelector('.modal-button-watched').textContent = 'added to watched';
        } 
 
       const localQueueList = JSON.parse(localStorage.getItem("queueList"));
       localQueueList === null ? localQueueList : queueList = [...localQueueList];
        if ((queueList.find(item => item.id == e.target.id) && true) || false) {
-        document.querySelector('.modal-button-queue').textContent = 'added to your queue list';
+        document.querySelector('.modal-button-queue').textContent = 'added to queue';
        } 
 
       function onQueueButton(event) {
         addMovieToQueueLocalStorage(event.target.id);
-        event.target.textContent = 'added to your queue list';
+        event.target.textContent = 'added to queue';
       }
         
       function onWatchedButton(event) {
         addMovieToWatchedLocalStorage(event.target.id)
-        event.target.textContent = 'added to your watched list';
+        event.target.textContent = 'added to watched';
       }
 
       // function onDeleteWatchedButton() {
