@@ -132,8 +132,8 @@ export function renderModalMovie(movie) {
           <p class="about-text">${movie.overview}
           </p>
           <div class="modal-movie__button-wrap">
-            <button class="modal-movie__button button button-watched  id="${movie.id}">Watched</button>
-            <button class="modal-movie__button button button-queue  id="${movie.id}">Queue</button>
+            <button class="modal-movie__button button modal-button-watched"  id="${movie.id}">Watched</button>
+            <button class="modal-movie__button button modal-button-queue"  id="${movie.id}">Queue</button>
           </div> 
         
         </div>`;

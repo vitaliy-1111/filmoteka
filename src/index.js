@@ -187,6 +187,7 @@ function addMovieToQueueLocalStorage(id) {
     fetchMovieById(id).then(resp => {
       queueList.push(resp);
       localStorage.setItem("queueList", JSON.stringify(queueList));
+
     })
   }
 }
@@ -238,9 +239,11 @@ function onBody(e) {
   e.preventDefault();
   if (e.target.classList.contains("button-queue--backdrop")) {
     addMovieToQueueLocalStorage(e.target.id);
+    e.target.textContent = 'added to your queue list';
   }
   if (e.target.classList.contains("button-watched--backdrop")) {
     addMovieToWatchedLocalStorage(e.target.id);
+    e.target.textContent = 'added to your watched list';
   }
    if (e.target.classList.contains("button-delete-watched--backdrop")) {
     onDeleteWatchedButton(e.target.id);
@@ -259,31 +262,29 @@ function onBody(e) {
       refs.modal.classList.toggle('backdrop--is-hidden');
       document.querySelector('body').style.overflow = "hidden";
       
-      document.querySelector('.button-queue').addEventListener('click', onQueueButton)
-      document.querySelector('.button-watched').addEventListener('click', onWatchedButton)
+      document.querySelector('.modal-button-queue').addEventListener('click', onQueueButton)
+      document.querySelector('.modal-button-watched').addEventListener('click', onWatchedButton)
        
       const localWatchedList = JSON.parse(localStorage.getItem("watchedList"));
       localWatchedList === null ? localWatchedList : watchedList = [...localWatchedList];    
        if ((watchedList.find(item => item.id == e.target.id) && true) || false) {
-         document.querySelector('.button-watched').textContent = "is on your watched list";
+         document.querySelector('.modal-button-watched').textContent = 'added to your queue list';
        } 
 
       const localQueueList = JSON.parse(localStorage.getItem("queueList"));
       localQueueList === null ? localQueueList : queueList = [...localQueueList];
        if ((queueList.find(item => item.id == e.target.id) && true) || false) {
-        document.querySelector('.button-queue').textContent = "is on your queue list";
+        document.querySelector('.modal-button-queue').textContent = 'added to your queue list';
        } 
 
       function onQueueButton(event) {
-        if (event.target.classList.contains('button-queue')) {
-          addMovieToQueueLocalStorage(e.target.id);
-        }
+        addMovieToQueueLocalStorage(event.target.id);
+        event.target.textContent = 'added to your queue list';
       }
         
       function onWatchedButton(event) {
-        if (event.target.classList.contains('button-watched')) {
-          addMovieToWatchedLocalStorage(e.target.id)
-        }
+        addMovieToWatchedLocalStorage(event.target.id)
+        event.target.textContent = 'added to your watched list';
       }
 
       // function onDeleteWatchedButton() {
