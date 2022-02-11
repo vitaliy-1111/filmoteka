@@ -90,20 +90,6 @@ function mouseEnterOnBackdrop(e) {
   }
    if (e.target.classList.contains("library-gallery__backdrop-card")) {
      e.target.style.opacity = 1;
-     
-     
-    //    let localMovies = JSON.parse(localStorage.getItem("watchedList"));
-    //       console.log(localMovies);
-    //       localMovies = localMovies.filter((movie) => movie.id != e.target.id);
-    //       console.log(localMovies)
-    //       localStorage.setItem("watchedList", JSON.stringify(localMovies));
-    //       localMovies = JSON.parse(localStorage.getItem("watchedList"));
-
-    //  const localQueueList = JSON.parse(localStorage.getItem("queueList"));
-    //   localQueueList === null ? localQueueList : queueList = [...localQueueList];
-    //   if ((queueList.find(item => item.id == e.target.id) && true) || false) {
-    //    e.target.childNodes[3].childNodes[3].childNodes[0].textContent = "added to your queue list";
-      // } 
   }
 
 }
@@ -114,9 +100,7 @@ function onSearhFormInput(event) {
   }
   
   const searchQueryValue = event.target.value;
- 
-  // paginationSearchMovies(event.target.value)
-  fetchMoviesByQuery(searchQueryValue, searchPaginationPage).then(resp => {
+   fetchMoviesByQuery(searchQueryValue, searchPaginationPage).then(resp => {
     searchPagination.reset(resp.total_pages);
     console.log(resp.results)
     if (resp.results.length === 0) {
@@ -156,10 +140,6 @@ function onLibraryPageLinkEl(e) {
   refs.homePageLinkEl.classList.remove("home-link--current");
   refs.libraryPageLinkEl.classList.add("library-link--current"); 
   refs.searhFormEl.innerHTML = libraryPage;
-  // console.log('library',e.currentTarget);
-  // if (e.target.classList.contains("cinema-gallery__img")) {
-  //   console.log('library', e.target.id)
-  // }
   
   const localMovies = JSON.parse(localStorage.getItem("watchedList"));
   console.log(localMovies);
@@ -315,25 +295,6 @@ function onBody(e) {
         addMovieToWatchedLocalStorage(event.target.id)
         event.target.textContent = 'added to watched';
       }
-
-      // function onDeleteWatchedButton() {
-      //     let localMovies = JSON.parse(localStorage.getItem("watchedList"));
-      //     console.log(localMovies);
-      //     localMovies = localMovies.filter((movie) => movie.id != e.target.id);
-      //     console.log(localMovies)
-      //     localStorage.setItem("watchedList", JSON.stringify(localMovies));
-      //     localMovies = JSON.parse(localStorage.getItem("watchedList"));
-      //     console.log(localMovies)
-      // }
-
-      // function onDeleteQueueButton() {    
-       
-      //   let localMovies = JSON.parse(localStorage.getItem("queueList"));
-      //   localMovies = localMovies.filter((movie) => movie.id != e.target.id);
-      //   localStorage.setItem("queueList", JSON.stringify(localMovies));
-      //   localMovies = JSON.parse(localStorage.getItem("queueList"));
-      // }
-
       modalOpen(e.target.id);   
       
     })
