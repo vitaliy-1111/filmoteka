@@ -10,7 +10,7 @@ import './js/scroll.js';
 import { refs } from './js/refs.js';
 import { homePage, libraryPage, modalMovie } from './js/template.js';
 import { fetchMoviesByQuery, fetchMoviesByMedia, fetchMovieById,  fetchMovieDetails } from './js/fetch.js';
-import { renderHomeGallery, renderLibraryGallaryWathed, renderLibraryGallaryQueue, renderEmptyGallery, renderModalMovie } from './js/render.js';
+import { renderHomeGallery, renderLibraryGallaryWatched, renderLibraryGallaryQueue, renderEmptyGallery, renderModalMovie } from './js/render.js';
 import { modalOpen } from './js/modal.js';
 
 let watchedList = [];
@@ -39,7 +39,6 @@ document.querySelector('.cinema-gallery__list').addEventListener('mouseover', mo
     document.querySelector('.cinema-gallery__list').addEventListener('mouseout', mouseOutOnBackdrop);
 
 fetchMovie("movie", homepPaginationPage);
-//  onScrollButton();
 
 function fetchMovie(mediaValue, homepPaginationPage) {
   document.querySelector('.search-result-text').classList.add('visually-hidden');
@@ -146,7 +145,7 @@ function onLibraryPageLinkEl(e) {
   if (localMovies === null) {
     renderEmptyGallery();
   } else {
-    renderLibraryGallaryWathed(localMovies);
+    renderLibraryGallaryWatched(localMovies);
 
     console.log(localMovies)
   }
@@ -162,7 +161,7 @@ function onLibBtnWatched() {
   if (localMovies === null) {
       renderEmptyGallery();
     } else {
-      renderLibraryGallaryWathed(localMovies, 'watched');
+      renderLibraryGallaryWatched(localMovies, 'watched');
   }
 }
 
@@ -214,7 +213,7 @@ function addMovieToWatchedLocalStorage(id) {
         if (localMovies === null) {
       renderEmptyGallery();
     } else {
-      renderLibraryGallaryWathed(localMovies, 'watched');
+      renderLibraryGallaryWatched(localMovies, 'watched');
   }
       }
 

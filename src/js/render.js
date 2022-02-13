@@ -37,7 +37,7 @@ export function renderHomeGallery(listMovies) {
   refs.galleryListEl.innerHTML = gallery.join(''); 
 }
 
-export function renderLibraryGallaryWathed(listMovies) {
+export function renderLibraryGallaryWatched(listMovies) {
    const gallery = listMovies.map(movie => {
     return `<li class="cinema-gallery__item">
         <div class="thumb-img">
